@@ -33,6 +33,11 @@ pub trait Wait {
         wait(duration);
         self
     }
+
+    fn and_then<F: FnOnce(&Self)>(&self, then: F) -> &Self {
+        then(self);
+        self
+    }
 }
 
 pub fn wait<D: IntoDuration>(duration: D) {
