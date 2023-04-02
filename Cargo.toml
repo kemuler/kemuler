@@ -1,0 +1,11 @@
+[package]
+name = "kemuler"
+version = "0.1.0"
+edition = "2021"
+description = "High level input emulation tool"
+authors = [ "Multirious" ]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+enigo = { version = "0.1.1" }
