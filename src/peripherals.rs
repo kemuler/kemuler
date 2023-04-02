@@ -904,6 +904,15 @@ impl MousePosition {
 
 crate_impls! { MousePosition }
 
+impl EmulateAbsoluteValue for MousePosition {
+    type Value = (i32, i32);
+
+    fn change_to(&self, by: Self::Value) -> &Self {
+        Enigo.mouse_move_to(by.0, by.1);
+        self
+    }
+}
+
 impl EmulateRelativeValue for MousePosition {
     type Value = (i32, i32);
 
