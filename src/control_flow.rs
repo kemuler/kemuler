@@ -28,14 +28,9 @@ impl IntoDuration for u64 {
     }
 }
 
-pub trait Wait {
+pub trait ControlFlow {
     fn wait<D: IntoDuration>(&self, duration: D) -> &Self {
         wait(duration);
-        self
-    }
-
-    fn and_then<F: FnOnce(&Self)>(&self, then: F) -> &Self {
-        then(self);
         self
     }
 }
@@ -44,4 +39,4 @@ pub fn wait<D: IntoDuration>(duration: D) {
     std::thread::sleep(duration.into_duration());
 }
 
-impl<T> Wait for T {}
+impl<T> ControlFlow for T {}

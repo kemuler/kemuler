@@ -1,4 +1,4 @@
-use crate::timing::IntoDuration;
+use crate::control_flow::IntoDuration;
 
 pub trait EmulateBinaryState: EmulateAbsoluteValue<Value = bool> {
     fn activate(&self) -> &Self {
