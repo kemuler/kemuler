@@ -585,6 +585,7 @@ pub enum Keyboard {
 
 impl Keyboard {
     fn as_enigo(&self) -> EnigoKeyboard {
+        let a = *self as u8 as EnigoKeyboard;
         match self {
             Keyboard::Num0 => EnigoKeyboard::Num0,
             Keyboard::Num1 => EnigoKeyboard::Num1,
@@ -933,6 +934,32 @@ impl EmulateRelativeValue for MouseScroll {
     fn change_by(&self, by: Self::Value) -> &Self {
         Enigo.mouse_scroll_x(by.0);
         Enigo.mouse_scroll_y(by.1);
+        self
+    }
+}
+
+/// Shortcut for basic use case
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct Sequence<T>(T);
+
+impl<'a> EmulateAbsoluteValue for Sequence<&'a str> {
+    type Value = bool;
+
+    fn change_to(&self, to: Self::Value) -> &Self {
+        self.0.as_bytes().iter().for_each(|b| {
+            Keyboard::Layout(*b as char).change_to(to);
+        });
+        self
+    }
+}
+
+impl EmulateAbsoluteValue for Sequence<String> {
+    type Value = bool;
+
+    fn change_to(&self, to: Self::Value) -> &Self {
+        self.0.as_bytes().iter().for_each(|b| {
+            Keyboard::Layout(*b as char).change_to(to);
+        });
         self
     }
 }
