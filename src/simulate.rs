@@ -31,28 +31,6 @@ macro_rules! impl_simulatable {
         impl_simulatable!(@impls($thing) $($tails)*)
     };
     (
-        @impls($thing:ident) fn Display::fmt(&$arg0:ident, $arg1:ident) lazy $($tails:tt)*
-    ) => {
-        impl ::std::fmt::Display for $thing {
-            fn fmt(&$arg0, $arg1: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                write!($arg1, "<implementor is lazy, go complain in git issue>")
-            }
-        }
-
-        impl_simulatable!(@impls($thing) $($tails)*)
-    };
-    (
-        @impls($thing:ident) fn Display::fmt(&$arg0:ident, $arg1:ident) inner($use_inner:ident) $($tails:tt)*
-    ) => {
-        impl ::std::fmt::Display for $thing {
-            fn fmt(&$arg0, $arg1: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                write!($arg1, "{}", $arg0.$use_inner)
-            }
-        }
-
-        impl_simulatable!(@impls($thing) $($tails)*)
-    };
-    (
         @impls($thing:ident) fn Debug::fmt(&arg0, $arg1:ident) $body:block $($tails:tt)*
     ) => {
         impl ::std::fmt::Debug for $thing {
@@ -69,7 +47,7 @@ macro_rules! impl_simulatable {
 #[macro_export]
 macro_rules! quick_impl_simulatable {
     (
-        $ident:ident{
+        $ident:ident [$display:expr] {
             $input_ident:ident: $input_ty:ty
         } = (&$self_arg:ident) $body:block
     ) => {
@@ -77,10 +55,12 @@ macro_rules! quick_impl_simulatable {
         struct $ident {
             $input_ident: $input_ty,
         }
-        impl_simulatable! {
+        $crate::impl_simulatable! {
             for $ident;
             fn Simulatable::call(&$self_arg) $body
-            fn Display::fmt(&self, f) inner(input)
+            fn Display::fmt(&self, f) {
+                ::std::write!(f, "{} {}", $display, self.$input_ident)
+            }
         }
         $crate::simulate::Simulate::new($ident { $input_ident })
     };
@@ -154,7 +134,7 @@ pub mod enigo {
     impl Simulator<SetTo<Key, bool>> for Enigo {
         fn simulate_input(&self, input: SetTo<Key, bool>) -> Simulate {
             quick_impl_simulatable! {
-                SomeStruct { input: SetTo<Key, bool> } = (&self) {
+                C ["Enigo"] { input: SetTo<Key, bool> } = (&self) {
                     println!("{self}");
                 }
             }
@@ -164,7 +144,7 @@ pub mod enigo {
     impl Simulator<ChangeBy<Key, bool>> for Enigo {
         fn simulate_input(&self, input: ChangeBy<Key, bool>) -> Simulate {
             quick_impl_simulatable! {
-                SomeStruct { input: ChangeBy<Key, bool> } = (&self) {
+                C ["Enigo"] { input: ChangeBy<Key, bool> } = (&self) {
                     println!("{self}");
                 }
             }
