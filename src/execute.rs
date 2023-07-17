@@ -5,7 +5,22 @@ use std::time::Duration;
 /// An `Executable` is a thing that can be run to simulate an input.
 // (Suppose to anyways. Nothing prevents some random guy from doing other random stuff)
 pub trait Executable {
+    /// Start simulating inputs.
     fn execute(&mut self);
+    /// Start simulatin inputs in other thread.
+    /// This is useful when you're using [`std::thread::sleep`]
+    /// (found in [`Combinator::and_sleep`] etc)
+    /// Andd you don't want to wait for that to finish.
+    fn spawn_thread_execute(&self) -> std::thread::JoinHandle<()>
+    where
+        Self: Clone + Send + 'static,
+    {
+        let s = self.clone();
+        std::thread::spawn(move || {
+            let mut s = s;
+            s.execute()
+        })
+    }
 }
 
 /// Helper combinator trait
