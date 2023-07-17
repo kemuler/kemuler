@@ -3,7 +3,6 @@
 use std::fmt;
 
 use crate::execute::Executable;
-use crate::input;
 
 /// Help implement `Simulate` with less boilerplate
 #[macro_export]
@@ -50,7 +49,7 @@ macro_rules! quick_impl_simulatable {
         $ident:ident [$display:expr] {
             $input_ident:ident: $input_ty:ty
         } = (&$self_arg:ident) $body:block
-    ) => {
+    ) => {{
         #[derive(Debug, Clone, Copy)]
         struct $ident {
             $input_ident: $input_ty,
@@ -63,7 +62,7 @@ macro_rules! quick_impl_simulatable {
             }
         }
         $crate::simulate::Simulate::new($ident { $input_ident })
-    };
+    }};
 }
 
 /// A `Simulator` is a simulator/backend that knows how to simulate an input.
@@ -73,7 +72,8 @@ macro_rules! quick_impl_simulatable {
 /// due to how the API is formed in the current state.
 pub trait Simulator<I> {
     /// Select this simulator for the input.
-    fn simulate_input(&self, input: I) -> Simulate;
+    fn simulate_input(&mut self, input: I);
+    fn build_simulate(&self, input: I) -> Simulate;
 }
 
 /// This trait is for implementing in `Simulator` that `Simulate` required.
@@ -85,6 +85,16 @@ pub trait Simulatable: dyn_clone::DynClone + fmt::Display + fmt::Debug {
 /// An input will not simulate until execute.
 /// To execute use `Executable::execute`.
 pub struct Simulate(Box<dyn Simulatable>);
+
+impl Simulate {
+    /// Create new `Simulate`.
+    pub fn new<S>(s: S) -> Simulate
+    where
+        S: Simulatable + 'static,
+    {
+        Simulate(Box::new(s))
+    }
+}
 
 impl Clone for Simulate {
     fn clone(&self) -> Self {
@@ -104,53 +114,9 @@ impl fmt::Display for Simulate {
     }
 }
 
-impl Simulate {
-    /// Create new `Simulate`.
-    pub fn new<S>(s: S) -> Simulate
-    where
-        S: Simulatable + 'static,
-    {
-        Simulate(Box::new(s))
-    }
-}
-
 impl Executable for Simulate {
     /// Execute `Simulate` to simulate the input.
     fn execute(&mut self) {
         self.0.call()
-    }
-}
-
-/// Simulate input using `Enigo`.
-pub mod enigo {
-    use crate::input::ChangeBy;
-
-    use super::{
-        input::{common::Key, SetTo},
-        Simulate, Simulator,
-    };
-
-    /// Simulate input using `Enigo`.
-    #[derive(Debug, Clone, Copy)]
-    pub struct Enigo;
-
-    impl Simulator<SetTo<Key, bool>> for Enigo {
-        fn simulate_input(&self, input: SetTo<Key, bool>) -> Simulate {
-            quick_impl_simulatable! {
-                C ["Enigo"] { input: SetTo<Key, bool> } = (&self) {
-                    println!("{self}");
-                }
-            }
-        }
-    }
-
-    impl Simulator<ChangeBy<Key, bool>> for Enigo {
-        fn simulate_input(&self, input: ChangeBy<Key, bool>) -> Simulate {
-            quick_impl_simulatable! {
-                C ["Enigo"] { input: ChangeBy<Key, bool> } = (&self) {
-                    println!("{self}");
-                }
-            }
-        }
     }
 }

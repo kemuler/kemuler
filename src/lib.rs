@@ -40,9 +40,13 @@ pub mod execute;
 pub mod input;
 pub mod simulate;
 
+pub mod inputs;
+pub mod simulators;
+
 pub mod prelude {
     use super::*;
 
     pub use execute::{Combinator, Executable};
-    pub use input::{common::Key, Input};
+    pub use input::Input;
+    pub use inputs::*;
 }
