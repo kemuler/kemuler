@@ -17,7 +17,7 @@ macro_rules! impl_simulatable {
         @impls($thing:ident) fn Simulatable::call(&$arg0:ident) $body:block $($tails:tt)*
     ) => {
         impl $crate::simulate::Simulatable for $thing {
-            fn call(&$arg0) $body
+            fn call(&mut $arg0) $body
         }
         impl_simulatable!(@impls($thing) $($tails)*)
     };
@@ -68,6 +68,9 @@ macro_rules! quick_impl_simulatable {
 
 /// A `Simulator` is a simulator/backend that knows how to simulate an input.
 /// It may support many kind of input (`I`).
+///
+/// If you want to add state to your `Simulator`, consider using `Arc`
+/// due to how the API is formed in the current state.
 pub trait Simulator<I> {
     /// Select this simulator for the input.
     fn simulate_input(&self, input: I) -> Simulate;
@@ -75,7 +78,7 @@ pub trait Simulator<I> {
 
 /// This trait is for implementing in `Simulator` that `Simulate` required.
 pub trait Simulatable: dyn_clone::DynClone + fmt::Display + fmt::Debug {
-    fn call(&self);
+    fn call(&mut self);
 }
 
 /// An input with selected simulator.
