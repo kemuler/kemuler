@@ -31,6 +31,28 @@ macro_rules! impl_simulatable {
         impl_simulatable!(@impls($thing) $($tails)*)
     };
     (
+        @impls($thing:ident) fn Display::fmt(&$arg0:ident, $arg1:ident) lazy $($tails:tt)*
+    ) => {
+        impl ::std::fmt::Display for $thing {
+            fn fmt(&$arg0, $arg1: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                write!($arg1, "<implementor is lazy, go complain in git issue>")
+            }
+        }
+
+        impl_simulatable!(@impls($thing) $($tails)*)
+    };
+    (
+        @impls($thing:ident) fn Display::fmt(&$arg0:ident, $arg1:ident) inner($use_inner:ident) $($tails:tt)*
+    ) => {
+        impl ::std::fmt::Display for $thing {
+            fn fmt(&$arg0, $arg1: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                write!($arg1, "{}", $arg0.$use_inner)
+            }
+        }
+
+        impl_simulatable!(@impls($thing) $($tails)*)
+    };
+    (
         @impls($thing:ident) fn Debug::fmt(&arg0, $arg1:ident) $body:block $($tails:tt)*
     ) => {
         impl ::std::fmt::Debug for $thing {
@@ -41,6 +63,27 @@ macro_rules! impl_simulatable {
     };
     (@impls($thing:ident)) => {};
     () => {};
+}
+
+/// Help implement `Simulate` with muchhhh less boilerplate
+#[macro_export]
+macro_rules! quick_impl_simulatable {
+    (
+        $ident:ident{
+            $input_ident:ident: $input_ty:ty
+        } = (&$self_arg:ident) $body:block
+    ) => {
+        #[derive(Debug, Clone, Copy)]
+        struct $ident {
+            $input_ident: $input_ty,
+        }
+        impl_simulatable! {
+            for $ident;
+            fn Simulatable::call(&$self_arg) $body
+            fn Display::fmt(&self, f) inner(input)
+        }
+        $crate::simulate::Simulate::new($ident { $input_ident })
+    };
 }
 
 /// A `Simulator` is a simulator/backend that knows how to simulate an input.
@@ -110,39 +153,21 @@ pub mod enigo {
 
     impl Simulator<SetTo<Key, bool>> for Enigo {
         fn simulate_input(&self, input: SetTo<Key, bool>) -> Simulate {
-            #[derive(Debug, Clone, Copy)]
-            struct SomeStruct {
-                input: SetTo<Key, bool>,
-            }
-            impl_simulatable! {
-                for SomeStruct;
-                fn Simulatable::call(&self) {
+            quick_impl_simulatable! {
+                SomeStruct { input: SetTo<Key, bool> } = (&self) {
                     println!("{self}");
                 }
-                fn Display::fmt(&self, f) {
-                    write!(f, "{}", self.input)
-                }
             }
-            Simulate::new(SomeStruct { input })
         }
     }
 
     impl Simulator<ChangeBy<Key, bool>> for Enigo {
         fn simulate_input(&self, input: ChangeBy<Key, bool>) -> Simulate {
-            #[derive(Debug, Clone, Copy)]
-            struct SomeStruct {
-                input: ChangeBy<Key, bool>,
-            }
-            impl_simulatable! {
-                for SomeStruct;
-                fn Simulatable::call(&self) {
+            quick_impl_simulatable! {
+                SomeStruct { input: ChangeBy<Key, bool> } = (&self) {
                     println!("{self}");
                 }
-                fn Display::fmt(&self, f) {
-                    write!(f, "{}", self.input)
-                }
             }
-            Simulate::new(SomeStruct { input })
         }
     }
 }
