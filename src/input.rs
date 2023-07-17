@@ -2,7 +2,7 @@
 
 use std::fmt;
 
-use crate::simulate;
+use crate::{prelude::Executable, simulate};
 
 /// Modules of inputs that is generally found/a standard.
 pub mod common {
@@ -39,6 +39,10 @@ pub mod common {
 pub trait Input: Sized {
     /// Select a simulator for this input.
     fn simulate_with<S: simulate::Simulator<Self>>(self, simulator: &S) -> simulate::Simulate;
+    /// Select a simulator for this input and execute it directly.
+    fn execute_with<S: simulate::Simulator<Self>>(self, simulator: &S) {
+        simulator.quick_execute(self)
+    }
 }
 
 impl<T> Input for T {
