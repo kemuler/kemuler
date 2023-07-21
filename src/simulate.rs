@@ -1,4 +1,5 @@
 //! Module that contains the `Simulator` trait and other things that implements it.
+#![macro_use]
 
 use std::fmt;
 
