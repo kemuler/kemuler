@@ -2,22 +2,21 @@
 
 use std::fmt;
 
-use crate::simulate;
+use crate::simulate::{SimulatablePack, Simulator};
 
 pub trait Input: Sized {
-    /// Select a simulator for this input.
-    fn simulate_with<S: simulate::Simulator<Self>>(self, simulator: &S) -> simulate::Simulate;
-    /// Select a simulator for this input and execute it directly.
-    fn execute_with<S: simulate::Simulator<Self>>(self, simulator: &mut S) {
+    /// Pack a simulator with this input.
+    fn pack_with<S: Simulator<Self>>(self, simulator: &S) -> SimulatablePack {
+        simulator.pack_input(self)
+    }
+
+    /// Simulate input directly.
+    fn simulate_with<S: Simulator<Self>>(self, simulator: &mut S) {
         simulator.simulate_input(self)
     }
 }
 
-impl<T> Input for T {
-    fn simulate_with<S: simulate::Simulator<Self>>(self, simulator: &S) -> simulate::Simulate {
-        simulator.build_simulate(self)
-    }
-}
+impl<T> Input for T {}
 
 /// Let [`simulate::Simulator`] knows that you want to toggle a key.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]

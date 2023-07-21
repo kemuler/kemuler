@@ -7,31 +7,26 @@ pub use self::enigo::Enigo;
 pub mod enigo {
     //! Simulate input using `Enigo`.
 
-    use crate::quick_impl_simulatable;
+    use crate::generate_build_simulatable_pack_impl;
     use crate::{
         input::{ChangeBy, SetTo},
         inputs::common::*,
-        simulate::{Simulate, Simulator},
+        simulate::{SimulatablePack, Simulator},
     };
 
-    macro_rules! enigo_build_simulate_impl {
-        ($ty:ty) => {
-            fn build_simulate(&self, input: $ty) -> Simulate {
-                quick_impl_simulatable!(
-                    C ["Enigo"] { input: $ty } = (&self) {
-                        Enigo.simulate_input(self.input)
-                    }
-                )
-            }
-        };
-    }
+    generate_build_simulatable_pack_impl! {["Enigo"] => enigo_build_impl}
 
     /// Simulate input using `Enigo`.
     #[derive(Debug, Clone, Copy)]
     pub struct Enigo;
 
     impl Simulator<SetTo<Key, bool>> for Enigo {
-        enigo_build_simulate_impl! {SetTo<Key, bool>}
+        enigo_build_impl! {
+            EnigoSetKeyto { input: SetTo<Key, bool> }
+            (self) {
+                Enigo.simulate_input(self.input)
+            }
+        }
 
         fn simulate_input(&mut self, input: SetTo<Key, bool>) {
             println!("{input}");
@@ -39,7 +34,12 @@ pub mod enigo {
     }
 
     impl Simulator<ChangeBy<Key, bool>> for Enigo {
-        enigo_build_simulate_impl! {ChangeBy<Key, bool>}
+        enigo_build_impl! {
+            EnigoChangeKeyBy { input: ChangeBy<Key, bool> }
+            (self) {
+                Enigo.simulate_input(self.input)
+            }
+        }
 
         fn simulate_input(&mut self, input: ChangeBy<Key, bool>) {
             println!("{input}");

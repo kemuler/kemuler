@@ -3,121 +3,94 @@
 
 use std::fmt;
 
-use crate::execute::Executable;
-
-/// Help implement `Simulate` with less boilerplate
+/// Helps implement `Simulator`s
 #[macro_export]
-macro_rules! impl_simulatable {
-    (
-        for $thing:ident;$($tails:tt)+
-    ) => {
-        impl_simulatable!(@impls($thing) $($tails)+)
-    };
-    (
-        @impls($thing:ident) fn Simulatable::call(&$arg0:ident) $body:block $($tails:tt)*
-    ) => {
-        impl $crate::simulate::Simulatable for $thing {
-            fn call(&mut $arg0) $body
+macro_rules! generate_build_simulatable_pack_impl {
+    ([$display:expr] => $new_macro_ident:ident) => {
+        macro_rules! $new_macro_ident {
+            (
+                $inner_ident:ident {
+                    $input_ident:ident: $input_ty:ty
+                }
+                ($self:ident) $body:block
+            ) => {
+                fn pack_input(&self, input: $input_ty) -> SimulatablePack {
+                    #[derive(::std::fmt::Debug, Clone, Copy)]
+                    struct $inner_ident {
+                        input: $input_ty,
+                    }
+                    impl $crate::simulate::SimulatablePackInner for $inner_ident {
+                        fn call(&mut $self) $body
+                    }
+                    impl ::std::fmt::Display for $inner_ident {
+                        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                            ::std::write!(f, "{} {}", $display, self.input)
+                        }
+                    }
+                    $crate::simulate::SimulatablePack::new($inner_ident { input })
+                }
+            };
         }
-        impl_simulatable!(@impls($thing) $($tails)*)
     };
-    (
-        @impls($thing:ident) fn Display::fmt(&$arg0:ident, $arg1:ident) $body:block $($tails:tt)*
-    ) => {
-        impl ::std::fmt::Display for $thing {
-            fn fmt(&$arg0, $arg1: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result $body
-        }
-
-        impl_simulatable!(@impls($thing) $($tails)*)
-    };
-    (
-        @impls($thing:ident) fn Debug::fmt(&arg0, $arg1:ident) $body:block $($tails:tt)*
-    ) => {
-        impl ::std::fmt::Debug for $thing {
-            fn fmt(&$arg0, $arg1: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result $body
-        }
-
-        impl_simulatable!(@impls($thing) $($tails)*)
-    };
-    (@impls($thing:ident)) => {};
-    () => {};
 }
 
-/// Help implement `Simulate` with muchhhh less boilerplate
-#[macro_export]
-macro_rules! quick_impl_simulatable {
-    (
-        $ident:ident [$display:expr] {
-            $input_ident:ident: $input_ty:ty
-        } = (&$self_arg:ident) $body:block
-    ) => {{
-        #[derive(Debug, Clone, Copy)]
-        struct $ident {
-            $input_ident: $input_ty,
-        }
-        $crate::impl_simulatable! {
-            for $ident;
-            fn Simulatable::call(&$self_arg) $body
-            fn Display::fmt(&self, f) {
-                ::std::write!(f, "{} {}", $display, self.$input_ident)
-            }
-        }
-        $crate::simulate::Simulate::new($ident { $input_ident })
-    }};
+/// A `Simulatable` is a thing that can be run to simulate an input.
+pub trait Simulatable {
+    /// Start simulating input.
+    fn simulate(&mut self);
 }
 
 /// A `Simulator` is a simulator/backend that knows how to simulate an input.
 /// It may support many kind of input (`I`).
 ///
-/// If you want to add state to your `Simulator`, consider using `Arc`
+/// If you want to add state to your `Simulator`, consider using [`std::sync::Arc`]
 /// due to how the API is formed in the current state.
 pub trait Simulator<I> {
-    /// Select this simulator for the input.
     fn simulate_input(&mut self, input: I);
-    fn build_simulate(&self, input: I) -> Simulate;
+    /// Select this simulator for the input and comebine it to [`SimulatablePack`].
+    fn pack_input(&self, input: I) -> SimulatablePack;
 }
 
-/// This trait is for implementing in `Simulator` that `Simulate` required.
-pub trait Simulatable: dyn_clone::DynClone + fmt::Display + fmt::Debug {
+/// This trait is for implementing in `Simulator` that `SimulatablePack` required.
+pub trait SimulatablePackInner: dyn_clone::DynClone + fmt::Display + fmt::Debug {
     fn call(&mut self);
 }
 
-/// An input with selected simulator.
-/// An input will not simulate until execute.
-/// To execute use `Executable::execute`.
-pub struct Simulate(Box<dyn Simulatable>);
+/// An input with selected simulator and is ready to be simulated.
+/// To simulate the input use `Executable::execute`.
+pub struct SimulatablePack(Box<dyn SimulatablePackInner>);
 
-impl Simulate {
-    /// Create new `Simulate`.
-    pub fn new<S>(s: S) -> Simulate
+impl SimulatablePack {
+    /// Create new `SimulatablePack`.
+    pub fn new<S>(s: S) -> SimulatablePack
     where
-        S: Simulatable + 'static,
+        S: SimulatablePackInner + 'static,
     {
-        Simulate(Box::new(s))
+        SimulatablePack(Box::new(s))
     }
 }
 
-impl Clone for Simulate {
+impl Clone for SimulatablePack {
     fn clone(&self) -> Self {
-        Simulate(dyn_clone::clone_box(&*self.0))
+        SimulatablePack(dyn_clone::clone_box(&*self.0))
     }
 }
 
-impl fmt::Debug for Simulate {
+impl fmt::Debug for SimulatablePack {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self.0)
     }
 }
 
-impl fmt::Display for Simulate {
+impl fmt::Display for SimulatablePack {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
     }
 }
 
-impl Executable for Simulate {
+impl Simulatable for SimulatablePack {
     /// Execute `Simulate` to simulate the input.
-    fn execute(&mut self) {
+    fn simulate(&mut self) {
         self.0.call()
     }
 }

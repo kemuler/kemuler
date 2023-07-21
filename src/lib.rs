@@ -1,8 +1,22 @@
 //! # Kemuler
 //!
-//! This is an experimental input simulation/emulation crate with different approach.
-//! This approach allows you to use combinator and switches backends (different impl for the same input).
-//! Input (Called `Simulate` in library) will not do anything unless execute.
+//! Welcome to an experimental input crate, `kemuler`!
+//!
+//! This crate offers a different kind of framework for simulating input
+//! utilizing Rust's type system to its full potential (over engineered),
+//! instead of the usual `key_down(Key)`.
+//!
+//! Features:
+//! - Highly customizable:
+//!     You can make any input work with any backend.
+//!     (A backend is called simulator in here)
+//! - Combinators:
+//!     But only a few is implemented currently.
+//!     Make a github issue if you got some more useful combinators!
+//!
+//! Some drawbacks:
+//! - Combinator needed boxed dynamic dispatch which mean allocation (for it's full potential).
+//! - Bunch of boilerplate is currently needed. (working on it)
 //!
 //! # Examples
 //! ## Basic
@@ -36,7 +50,7 @@
 //!     .execute();
 //! ```
 
-pub mod execute;
+pub mod combinator;
 pub mod input;
 pub mod simulate;
 
@@ -46,7 +60,8 @@ pub mod simulators;
 pub mod prelude {
     use super::*;
 
-    pub use execute::{Combinator, Executable};
+    pub use combinator::Combinator;
     pub use input::Input;
     pub use inputs::*;
+    pub use simulate::Simulatable;
 }
