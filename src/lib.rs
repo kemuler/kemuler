@@ -36,6 +36,7 @@
 //! // (the usual way is still supported)
 //! Enigo.simulate_input(Key::A.down())
 
+pub mod combinator;
 pub mod input;
 pub mod simulate;
 
