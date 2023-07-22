@@ -1,6 +1,9 @@
 use std::fmt;
 
-use crate::simulate::{Simulatable, Simulator};
+use crate::{
+    prelude::Input,
+    simulate::{Simulatable, Simulator},
+};
 
 /// This trait is for implementing in `Simulator` that `SimulatablePack` required.
 pub trait SimulatablePackInner: dyn_clone::DynClone + fmt::Display + fmt::Debug {
@@ -53,7 +56,10 @@ pub trait PackWith: Sized {
     fn pack_with<P: InputPacker<Self>>(self, packer: &P) -> SimulatablePack;
 }
 
-impl<I> PackWith for I {
+impl<I> PackWith for I
+where
+    I: Input,
+{
     fn pack_with<P: InputPacker<Self>>(self, packer: &P) -> SimulatablePack {
         packer.pack_input(self)
     }
