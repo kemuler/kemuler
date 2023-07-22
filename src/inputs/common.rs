@@ -5,7 +5,7 @@ use std::fmt;
 
 #[rustfmt::skip]
 #[non_exhaustive]
-#[derive(Debug, Clone, Copy,PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Key {
     A, B, C, D, E, F, G, H, I, J, K, L, M,
     N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
@@ -30,12 +30,6 @@ pub enum Key {
     UpArrow, DownArrow, LeftArrow, RightArrow,
 }
 
-impl fmt::Display for Key {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{self:?}")
-    }
-}
-
 impl Key {
     /// Toggle this key
     pub fn toggle(self) -> Toggle<Self> {
@@ -58,18 +52,26 @@ impl Key {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct MousePostion;
+impl Input for Key {}
 
-impl MousePostion {
-    pub fn move_to(self, x: i32, y: i32) -> SetTo<MousePostion, (i32, i32)> {
+impl fmt::Display for Key {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{self:?}")
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct MousePosition;
+
+impl MousePosition {
+    pub fn move_to(self, x: i32, y: i32) -> SetTo<Self, (i32, i32)> {
         SetTo {
             input: self,
             to: (x, y),
         }
     }
 
-    pub fn move_by(self, x: i32, y: i32) -> ChangeBy<MousePostion, (i32, i32)> {
+    pub fn move_by(self, x: i32, y: i32) -> ChangeBy<Self, (i32, i32)> {
         ChangeBy {
             input: self,
             by: (x, y),
@@ -77,7 +79,9 @@ impl MousePostion {
     }
 }
 
-impl fmt::Display for MousePostion {
+impl Input for MousePosition {}
+
+impl fmt::Display for MousePosition {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{self:?}")
     }
@@ -86,21 +90,16 @@ impl fmt::Display for MousePostion {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct MouseScroll;
 
-impl MousePostion {
-    pub fn scroll_to(self, x: i32, y: i32) -> SetTo<MousePostion, (i32, i32)> {
-        SetTo {
-            input: self,
-            to: (x, y),
-        }
-    }
-
-    pub fn scroll_by(self, x: i32, y: i32) -> ChangeBy<MousePostion, (i32, i32)> {
+impl MouseScroll {
+    pub fn scroll_by(self, x: i32, y: i32) -> ChangeBy<Self, (i32, i32)> {
         ChangeBy {
             input: self,
             by: (x, y),
         }
     }
 }
+
+impl Input for MouseScroll {}
 
 impl fmt::Display for MouseScroll {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -138,6 +137,8 @@ impl MouseButton {
         self.set_to(false)
     }
 }
+
+impl Input for MouseButton {}
 
 impl fmt::Display for MouseButton {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

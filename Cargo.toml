@@ -13,9 +13,5 @@ dyn-clone = "1.0.12"
 enigo = { version = "0.1.1", optional = true }
 
 [features]
-default = ["global-simulator"]
-
-# Global simulator API
-global-simulator = []
 # Use Enigo as simulator
 enigo = ["dep:enigo"]
