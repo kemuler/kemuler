@@ -4,4 +4,4 @@
 pub use self::enigo::Enigo;
 
 #[cfg(feature = "enigo")]
-pub mod enigo;
+mod enigo;
