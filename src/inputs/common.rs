@@ -6,7 +6,7 @@ use std::fmt;
 #[rustfmt::skip]
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum Key {
+pub enum Keyboard {
     A, B, C, D, E, F, G, H, I, J, K, L, M,
     N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
 
@@ -30,7 +30,7 @@ pub enum Key {
     UpArrow, DownArrow, LeftArrow, RightArrow,
 }
 
-impl Key {
+impl Keyboard {
     /// Toggle this key
     pub fn toggle(self) -> Toggle<Self> {
         Toggle { input: self }
@@ -52,9 +52,9 @@ impl Key {
     }
 }
 
-impl Input for Key {}
+impl Input for Keyboard {}
 
-impl fmt::Display for Key {
+impl fmt::Display for Keyboard {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{self:?}")
     }

@@ -10,14 +10,14 @@ use crate::{
 #[derive(Debug, Clone, Copy)]
 pub struct Enigo;
 
-impl Simulator<SetTo<Key, bool>> for Enigo {
-    fn simulate_input(&mut self, input: SetTo<Key, bool>) {
+impl Simulator<SetTo<Keyboard, bool>> for Enigo {
+    fn simulate_input(&mut self, input: SetTo<Keyboard, bool>) {
         println!("{input}");
     }
 }
 
-impl Simulator<ChangeBy<Key, bool>> for Enigo {
-    fn simulate_input(&mut self, input: ChangeBy<Key, bool>) {
+impl Simulator<ChangeBy<Keyboard, bool>> for Enigo {
+    fn simulate_input(&mut self, input: ChangeBy<Keyboard, bool>) {
         println!("{input}");
     }
 }
