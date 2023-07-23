@@ -9,5 +9,5 @@ pub trait Simulatable {
 /// A `Simulator` is a thing that knows how to simulate an input.
 /// It may support many type of input (`I`).
 pub trait Simulator<I> {
-    fn simulate_input(&mut self, input: I);
+    fn run(&mut self, input: I);
 }
