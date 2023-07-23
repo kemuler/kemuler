@@ -6,7 +6,7 @@ use crate::simulate::Simulator;
 
 pub trait Input: Sized {
     /// Simulate input directly.
-    fn simulate_with<S: Simulator<Self>>(self, simulator: &mut S) {
+    fn run_with<S: Simulator<Self>>(self, simulator: &mut S) {
         simulator.run(self)
     }
 }
