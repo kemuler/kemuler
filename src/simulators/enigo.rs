@@ -8,16 +8,20 @@ use crate::{
 use enigo::{KeyboardControllable, MouseControllable};
 
 /// Simulate input using `Enigo`.
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Enigo(enigo::Enigo);
+
+impl Enigo {
+    pub fn new() -> Enigo {
+        Enigo(enigo::Enigo::new())
+    }
+}
 
 fn enigoify_common_mouse_button(button: common::MouseButton) -> enigo::MouseButton {
     match button {
         common::MouseButton::Left => enigo::MouseButton::Left,
         common::MouseButton::Middle => enigo::MouseButton::Middle,
         common::MouseButton::Right => enigo::MouseButton::Right,
-        common::MouseButton::X1 => enigo::MouseButton::Forward,
-        common::MouseButton::X2 => enigo::MouseButton::Back,
     }
 }
 

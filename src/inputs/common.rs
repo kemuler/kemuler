@@ -112,8 +112,6 @@ pub enum MouseButton {
     Left,
     Middle,
     Right,
-    X1,
-    X2,
 }
 
 impl MouseButton {
