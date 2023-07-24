@@ -9,31 +9,8 @@ pub trait InputEvent<S>: Sized {
     fn run_with(self, simulator: &mut S);
 }
 
-/// Let [`simulate::Simulator`] knows that you want to toggle a key.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Toggle<I> {
-    pub input: I,
-}
-
-impl<I, S> InputEvent<S> for Toggle<I>
-where
-    S: Simulator<Self>,
-{
-    fn run_with(self, simulator: &mut S) {
-        simulator.run(self)
-    }
-}
-
-impl<I> fmt::Display for Toggle<I>
-where
-    I: fmt::Display,
-{
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "toggle {}", self.input)
-    }
-}
-
 /// Let [`simulate::Simulator`] knows that you want to set the value of a key to a value.
+/// Simulator must support this to be used.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SetTo<I, V> {
     pub input: I,
@@ -60,6 +37,7 @@ where
 }
 
 /// Let [`simulate::Simulator`] knows that you want to change the value of a key by a value.
+/// Simulator must support this to be used.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ChangeBy<I, V> {
     pub input: I,
