@@ -1,7 +1,7 @@
 //! Module of simulaties
 
 /// A `Simulatable` is a thing that can be run to simulate an input without a simulator.
-pub trait ReadySimulatable {
+pub trait ReadySimulate {
     /// Start simulating input.
     fn run(&mut self);
 }
