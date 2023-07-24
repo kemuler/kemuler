@@ -2,26 +2,28 @@ use std::{io::stdin, time::Instant};
 
 use kemuler::{prelude::*, simulators::Enigo};
 
-fn prompt<T: std::str::FromStr>(message: &str) -> T {
-    println!("Radius in pixels:");
+fn prompt<T>(message: &str) -> T
+where
+    T: std::str::FromStr,
+    <T as std::str::FromStr>::Err: std::fmt::Debug,
+{
+    println!("{message}");
     read_line().trim().parse::<T>().unwrap()
 }
 
 fn read_line() -> String {
     let mut line = String::new();
-    stdin.read_line(&mut line).unwrap();
+    stdin().read_line(&mut line).unwrap();
     line
 }
 
 fn main() {
-    let stdin = stdin();
-
     let radius = prompt::<f64>("Radius in pixels:");
     let speed = prompt::<f64>("Speed:");
     let offset_x = radius;
     let offset_y = radius;
 
-    let enigo = kemuler::simulators::Enigo::new();
+    let mut enigo = Enigo::new();
 
     let mut delta_time = 0f64;
     let mut time_elasped = 0f64;
