@@ -1,12 +1,35 @@
-//! This module contains the `Event` trait and other things that implements it.
+//! This module contains the `Simulatable` trait and other things that implements it.
 
 use std::fmt;
 
-use crate::simulate::Simulator;
+use crate::simulate::Simulate;
 
-pub trait Event<S>: Sized {
+/// Simulatable is a thing that can be simulated by a simulator.
+/// Alternatively called an event.
+pub trait Simulatable<S>: Sized {
     /// Simulate this input.
     fn run_with(self, simulator: &mut S);
+}
+
+/// Simulatable is a thing that can be simulated by a simulator.
+/// Alternatively called an event.
+/// This is falliable version for [`Simulatable`]
+pub trait TrySimulatable<S>: Sized {
+    type Error;
+    /// Try simulate this input.
+    fn try_run_with(self, simulator: &mut S) -> Result<(), (Self::Error, Self)>;
+}
+
+impl<T, S> TrySimulatable<S> for T
+where
+    S: Simulate<T>,
+{
+    type Error = void::Void;
+
+    fn try_run_with(self, simulator: &mut S) -> Result<(), (Self::Error, Self)> {
+        simulator.run(self);
+        Ok(())
+    }
 }
 
 /// Let [`Simulator`] knows that you want to set the value of an input to a value.
@@ -17,9 +40,9 @@ pub struct SetTo<I, V> {
     pub to: V,
 }
 
-impl<I, V, S> Event<S> for SetTo<I, V>
+impl<I, V, S> Simulatable<S> for SetTo<I, V>
 where
-    S: Simulator<Self>,
+    S: Simulate<Self>,
 {
     fn run_with(self, simulator: &mut S) {
         simulator.run(self)
@@ -44,9 +67,9 @@ pub struct ChangeBy<I, V> {
     pub by: V,
 }
 
-impl<I, V, S> Event<S> for ChangeBy<I, V>
+impl<I, V, S> Simulatable<S> for ChangeBy<I, V>
 where
-    S: Simulator<Self>,
+    S: Simulate<Self>,
 {
     fn run_with(self, simulator: &mut S) {
         simulator.run(self)

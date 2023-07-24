@@ -1,8 +1,8 @@
 use std::{io::stdin, thread, time::Duration};
 
-use kemuler::{prelude::*, simulate::Simulator, simulators::Enigo};
+use kemuler::{prelude::*, simulators::Enigo};
 
-fn enigo<E: Event<Enigo>>(e: E) {
+fn enigo<E: Simulatable<Enigo>>(e: E) {
     e.run_with(&mut kemuler::simulators::Enigo::new())
 }
 

@@ -8,14 +8,18 @@ authors = [ "Multirious" ]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+dyn-clone = "1.0.12"
 enigo = { version = "0.1.1", optional = true }
+void = "1.0.2"
 
 [build-dependencies]
 rustc_version = "0.4.0"
 
 [features]
+default = ["enigo", "event-log"]
 # Use Enigo as simulator
 enigo = ["dep:enigo"]
+event-log = []
 
 # Use all features
 all = ["enigo"]

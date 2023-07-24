@@ -2,7 +2,7 @@
 //!
 //! Welcome to an experimental input simulation crate, `kemuler`!
 //!
-//! This crate offers a different kind of input simulator framework,
+//! This crate offers a different kind of high level input simulator framework,
 //! utilizing Rust’s type system to its full potential (or just over-engineered)
 //! instead of the usual key_down(Key).
 //! Why?
@@ -65,6 +65,6 @@ pub mod prelude {
     use super::*;
 
     pub use combinator::Combine;
-    pub use event::Event;
+    pub use event::Simulatable;
     pub use inputs::common::*;
 }

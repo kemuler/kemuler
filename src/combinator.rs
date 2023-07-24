@@ -3,7 +3,7 @@
 use core::fmt;
 use std::{thread, time::Duration};
 
-use crate::event::Event;
+use crate::event::Simulatable;
 
 /// Helper combinator trait.
 pub trait Combine: Sized {
@@ -31,10 +31,10 @@ impl<T> Combine for T {}
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct AndThen<A, B>(A, B);
 
-impl<A, B, S> Event<S> for AndThen<A, B>
+impl<A, B, S> Simulatable<S> for AndThen<A, B>
 where
-    A: Event<S>,
-    B: Event<S>,
+    A: Simulatable<S>,
+    B: Simulatable<S>,
 {
     fn run_with(self, simulator: &mut S) {
         self.0.run_with(simulator);
@@ -56,7 +56,7 @@ where
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Sleep(Duration);
 
-impl<S> Event<S> for Sleep {
+impl<S> Simulatable<S> for Sleep {
     fn run_with(self, _: &mut S) {
         thread::sleep(self.0);
     }

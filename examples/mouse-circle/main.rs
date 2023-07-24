@@ -1,19 +1,15 @@
-use std::{
-    io::stdin,
-    thread,
-    time::{Duration, Instant},
-};
+use std::{io::stdin, time::Instant};
 
-use kemuler::{prelude::*, simulate::Simulator, simulators::Enigo};
+use kemuler::{prelude::*, simulators::Enigo};
 
-fn enigo<E: Event<Enigo>>(e: E) {
+fn enigo<E: Simulatable<Enigo>>(e: E) {
     e.run_with(&mut kemuler::simulators::Enigo::new())
 }
 
 fn main() {
     let stdin = stdin();
     let radius = {
-        println!("Radius:");
+        println!("Radius in pixels:");
         let mut line = String::new();
         stdin.read_line(&mut line).unwrap();
         let line = line.trim();
