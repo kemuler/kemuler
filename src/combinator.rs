@@ -23,6 +23,10 @@ pub trait Combine: Sized {
     fn sleep_ms(self, duration: u64) -> AndThen<Self, Sleep> {
         self.sleep(Duration::from_millis(duration))
     }
+
+    fn only_if(self, condition: bool) -> OnlyIf<Self> {
+        OnlyIf(self, condition)
+    }
 }
 
 impl<T> Combine for T {}
@@ -65,5 +69,33 @@ impl<S> Simulatable<S> for Sleep {
 impl fmt::Display for Sleep {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "sleep {} ms;", self.0.as_millis())
+    }
+}
+
+/// Simulate if the closure evaluated to true
+/// Useful with conditional compilation. Not sure about other stuff.
+pub struct OnlyIf<T>(T, bool);
+
+impl<T, S> Simulatable<S> for OnlyIf<T>
+where
+    T: Simulatable<S>,
+{
+    fn run_with(self, simulator: &mut S) {
+        if self.1 {
+            self.0.run_with(simulator)
+        }
+    }
+}
+
+impl<T> fmt::Display for OnlyIf<T>
+where
+    T: fmt::Display,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if self.1 {
+            write!(f, "run {};", self.0)
+        } else {
+            write!(f, "don't run {};", self.0)
+        }
     }
 }

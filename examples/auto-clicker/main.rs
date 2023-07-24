@@ -1,6 +1,5 @@
-use std::{io::stdin, thread, time::Duration};
-
 use kemuler::{prelude::*, simulators::Enigo};
+use std::io::stdin;
 
 fn enigo<E: Simulatable<Enigo>>(e: E) {
     e.run_with(&mut kemuler::simulators::Enigo::new())
@@ -29,7 +28,6 @@ fn main() {
         }
     };
     loop {
-        enigo(button.click());
-        thread::sleep(Duration::from_millis(interval));
+        enigo(button.click().sleep_ms(interval));
     }
 }

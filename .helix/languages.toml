@@ -2,5 +2,5 @@
 name = "rust"
 
 [language.config]
-cargo = { extraArgs = ["--all-features"], features = "all", allFeatures = true  }
-check = { extraArgs = ["--all-features"] }
+# cargo = { extraArgs = ["--all-features"], features = "all", allFeatures = true  }
+# check = { extraArgs = ["--all-features"] }

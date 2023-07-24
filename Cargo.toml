@@ -21,9 +21,6 @@ default = ["enigo", "event-log"]
 enigo = ["dep:enigo"]
 event-log = []
 
-# Use all features
-all = ["enigo"]
-
 [[example]]
 name = "auto-clicker"
 required-features = ["enigo"]
