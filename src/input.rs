@@ -4,7 +4,7 @@ use std::fmt;
 
 use crate::simulate::Simulator;
 
-pub trait Input: Sized {
+pub trait InputEvent: Sized {
     /// Simulate input directly.
     fn run_with<S: Simulator<Self>>(self, simulator: &mut S) {
         simulator.run(self)

@@ -45,7 +45,7 @@ pub mod simulators;
 pub mod prelude {
     use super::*;
 
-    pub use input::Input;
+    pub use input::InputEvent;
     pub use inputs::common::*;
     pub use simulate::ReadySimulatable;
 }

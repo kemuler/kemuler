@@ -52,8 +52,6 @@ impl Keyboard {
     }
 }
 
-impl Input for Keyboard {}
-
 impl fmt::Display for Keyboard {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{self:?}")
@@ -79,8 +77,6 @@ impl MousePosition {
     }
 }
 
-impl Input for MousePosition {}
-
 impl fmt::Display for MousePosition {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{self:?}")
@@ -98,8 +94,6 @@ impl MouseScroll {
         }
     }
 }
-
-impl Input for MouseScroll {}
 
 impl fmt::Display for MouseScroll {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -135,8 +129,6 @@ impl MouseButton {
         self.set_to(false)
     }
 }
-
-impl Input for MouseButton {}
 
 impl fmt::Display for MouseButton {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
