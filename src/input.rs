@@ -1,4 +1,4 @@
-//! This module contains the `Input` trait and other things that (should) implements it.
+//! This module contains the `InputEvent` trait and other things that implements it.
 
 use std::fmt;
 
