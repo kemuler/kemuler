@@ -3,7 +3,7 @@
 /// A `Simulatable` is a thing that can be run to simulate an input.
 pub trait Simulatable {
     /// Start simulating input.
-    fn simulate(&mut self);
+    fn run(&mut self);
 }
 
 /// A `Simulator` is a thing that knows how to simulate an input.
