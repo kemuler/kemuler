@@ -1,13 +1,9 @@
 //! Simulate input using `Enigo`.
 
-use std::fmt;
-
-#[cfg(feature = "event-log")]
-use crate::simulators::EventLog;
 use crate::{
     event::{ChangeBy, SetTo},
     inputs::common,
-    simulate::{Simulate, TrySimulate},
+    simulate::Simulate,
 };
 use enigo::{KeyboardControllable, MouseControllable};
 
@@ -115,47 +111,5 @@ impl Simulate<ChangeBy<common::MouseScroll, (i32, i32)>> for Enigo {
         if by.1 != 0 {
             self.0.mouse_scroll_x(by.1);
         }
-    }
-}
-
-#[derive(Debug)]
-pub struct UnknownEventError;
-
-impl fmt::Display for UnknownEventError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "unknown event")
-    }
-}
-
-impl std::error::Error for UnknownEventError {}
-
-#[cfg(feature = "event-log")]
-impl TrySimulate<Box<dyn EventLog>> for Enigo {
-    type Error = UnknownEventError;
-
-    fn try_run(
-        &mut self,
-        event: Box<dyn EventLog>,
-    ) -> Result<(), (Self::Error, Box<dyn EventLog>)> {
-        macro_rules! simulate {
-            ($($ty:ty)*) => {
-                $(
-                    if let Some(v) = event.as_any().downcast_ref::<$ty>() {
-                        self.run(v.clone());
-                        return Ok(());
-                    }
-                )*
-            };
-        }
-        simulate! {
-            SetTo<enigo::Key, bool>
-            SetTo<enigo::MouseButton, bool>
-            SetTo<common::MouseButton, bool>
-            SetTo<common::MousePosition, (i32, i32)>
-            ChangeBy<common::MousePosition, (i32, i32)>
-            ChangeBy<common::MouseScroll, (i32, i32)>
-        }
-
-        Err((UnknownEventError, event))
     }
 }

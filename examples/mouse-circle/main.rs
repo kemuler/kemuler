@@ -2,28 +2,27 @@ use std::{io::stdin, time::Instant};
 
 use kemuler::{prelude::*, simulators::Enigo};
 
-fn enigo<E: Simulatable<Enigo>>(e: E) {
-    e.run_with(&mut kemuler::simulators::Enigo::new())
+fn prompt<T: std::str::FromStr>(message: &str) -> T {
+    println!("Radius in pixels:");
+    read_line().trim().parse::<T>().unwrap()
+}
+
+fn read_line() -> String {
+    let mut line = String::new();
+    stdin.read_line(&mut line).unwrap();
+    line
 }
 
 fn main() {
     let stdin = stdin();
-    let radius = {
-        println!("Radius in pixels:");
-        let mut line = String::new();
-        stdin.read_line(&mut line).unwrap();
-        let line = line.trim();
-        line.parse::<f64>().unwrap()
-    };
-    let speed = {
-        println!("Speed:");
-        let mut line = String::new();
-        stdin.read_line(&mut line).unwrap();
-        let line = line.trim();
-        line.parse::<f64>().unwrap()
-    };
+
+    let radius = prompt::<f64>("Radius in pixels:");
+    let speed = prompt::<f64>("Speed:");
     let offset_x = radius;
     let offset_y = radius;
+
+    let enigo = kemuler::simulators::Enigo::new();
+
     let mut delta_time = 0f64;
     let mut time_elasped = 0f64;
     loop {
@@ -34,7 +33,10 @@ fn main() {
         let y = (time_elasped * speed).sin() * radius;
         let pos_x = x + offset_x;
         let pos_y = y + offset_y;
-        enigo(MousePosition.move_to(pos_x as i32, pos_y as i32));
+        MousePosition
+            .move_to(pos_x as i32, pos_y as i32)
+            .run_with(&mut enigo);
+
         delta_time = (Instant::now() - previous_instant).as_secs_f64();
     }
 }

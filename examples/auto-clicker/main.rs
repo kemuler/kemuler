@@ -1,25 +1,24 @@
 use kemuler::{prelude::*, simulators::Enigo};
 use std::io::stdin;
 
-fn enigo<E: Simulatable<Enigo>>(e: E) {
-    e.run_with(&mut kemuler::simulators::Enigo::new())
+fn prompt<T: std::str::FromStr>(message: &str) -> T {
+    println!("Radius in pixels:");
+    read_line().trim().parse::<T>().unwrap()
+}
+
+fn read_line() -> String {
+    let mut line = String::new();
+    stdin.read_line(&mut line).unwrap();
+    line
 }
 
 fn main() {
     let stdin = stdin();
-    let interval = {
-        println!("Interval in milliseconds:");
-        let mut line = String::new();
-        stdin.read_line(&mut line).unwrap();
-        let line = line.trim();
-        line.parse::<u64>().unwrap()
-    };
+
+    let interval = prompt::<u64>("Interval in milliseconds:");
     let button = {
         println!("Mouse button (left, right, middle):");
-        let mut line = String::new();
-        stdin.read_line(&mut line).unwrap();
-        let line = line.trim();
-        let line = line.to_lowercase();
+        let line = read_line().trim().to_lowercase();
         match &line[..] {
             "left" | "l" => MouseButton::Left,
             "right" | "r" => MouseButton::Right,
@@ -27,6 +26,7 @@ fn main() {
             _ => panic!("dumbass, choose only left, right, or middle"),
         }
     };
+
     loop {
         enigo(button.click().sleep_ms(interval));
     }
