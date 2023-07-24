@@ -1,6 +1,6 @@
-//! Module that contains the `Simulator` trait and other things that implements it.
+//! Module of simulaties
 
-/// A `Simulatable` is a thing that can be run to simulate an input.
+/// A `Simulatable` is a thing that can be run to simulate an input without a simulator.
 pub trait Simulatable {
     /// Start simulating input.
     fn run(&mut self);
