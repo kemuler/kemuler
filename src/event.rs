@@ -1,15 +1,15 @@
-//! This module contains the `InputEvent` trait and other things that implements it.
+//! This module contains the `Event` trait and other things that implements it.
 
 use std::fmt;
 
 use crate::simulate::Simulator;
 
-pub trait InputEvent<S>: Sized {
+pub trait Event<S>: Sized {
     /// Simulate this input.
     fn run_with(self, simulator: &mut S);
 }
 
-/// Let [`simulate::Simulator`] knows that you want to set the value of a key to a value.
+/// Let [`Simulator`] knows that you want to set the value of an input to a value.
 /// Simulator must support this to be used.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SetTo<I, V> {
@@ -17,7 +17,7 @@ pub struct SetTo<I, V> {
     pub to: V,
 }
 
-impl<I, V, S> InputEvent<S> for SetTo<I, V>
+impl<I, V, S> Event<S> for SetTo<I, V>
 where
     S: Simulator<Self>,
 {
@@ -36,7 +36,7 @@ where
     }
 }
 
-/// Let [`simulate::Simulator`] knows that you want to change the value of a key by a value.
+/// Let [`Simulator`] knows that you want to change the value of an input by a value.
 /// Simulator must support this to be used.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ChangeBy<I, V> {
@@ -44,7 +44,7 @@ pub struct ChangeBy<I, V> {
     pub by: V,
 }
 
-impl<I, V, S> InputEvent<S> for ChangeBy<I, V>
+impl<I, V, S> Event<S> for ChangeBy<I, V>
 where
     S: Simulator<Self>,
 {

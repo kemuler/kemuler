@@ -1,11 +1,11 @@
 //! Generally found/a standard input
 
-use crate::input::*;
+use crate::{combinator::*, event::*};
 use std::fmt;
 
 #[rustfmt::skip]
 #[non_exhaustive]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Keyboard {
     A, B, C, D, E, F, G, H, I, J, K, L, M,
     N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
@@ -31,22 +31,19 @@ pub enum Keyboard {
 }
 
 impl Keyboard {
-    /// Toggle this key
-    pub fn toggle(self) -> Toggle<Self> {
-        Toggle { input: self }
-    }
-
     /// Set this key
     pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
         SetTo { input: self, to }
     }
 
-    /// Press the key (`set_to(true)`)
+    /// Press the key.
+    /// This is a convenience shorthand, see code for more details.
     pub fn down(self) -> SetTo<Self, bool> {
         self.set_to(true)
     }
 
-    /// Release the key (`set_to(false)`)
+    /// Release the key
+    /// This is a convenience shorthand, see code for more details.
     pub fn up(self) -> SetTo<Self, bool> {
         self.set_to(false)
     }
@@ -58,7 +55,7 @@ impl fmt::Display for Keyboard {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct MousePosition;
 
 impl MousePosition {
@@ -83,10 +80,11 @@ impl fmt::Display for MousePosition {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct MouseScroll;
 
 impl MouseScroll {
+    /// Scroll mouse wheel.
     pub fn scroll_by(self, x: i32, y: i32) -> ChangeBy<Self, (i32, i32)> {
         ChangeBy {
             input: self,
@@ -101,7 +99,7 @@ impl fmt::Display for MouseScroll {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum MouseButton {
     Left,
     Middle,
@@ -109,24 +107,27 @@ pub enum MouseButton {
 }
 
 impl MouseButton {
-    /// Toggle this key
-    pub fn toggle(self) -> Toggle<Self> {
-        Toggle { input: self }
-    }
-
-    /// Set this key
+    /// Set this button.
     pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
         SetTo { input: self, to }
     }
 
-    /// Press the key (`set_to(true)`)
+    /// Press the button.
+    /// This is a convenience shorthand, see code for more details.
     pub fn down(self) -> SetTo<Self, bool> {
         self.set_to(true)
     }
 
-    /// Release the key (`set_to(false)`)
+    /// Release the button.
+    /// This is a convenience shorthand, see code for more details.
     pub fn up(self) -> SetTo<Self, bool> {
         self.set_to(false)
+    }
+
+    /// Press and release the button.
+    /// This is a convenience shorthand, see code for more details.
+    pub fn click(self) -> AndThen<SetTo<Self, bool>, SetTo<Self, bool>> {
+        self.down().then(self.up())
     }
 }
 

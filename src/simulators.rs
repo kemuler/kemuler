@@ -1,4 +1,4 @@
-//! Collection of built-in simulator/backend implemented by this crate
+//! Collection of built-in `Simulator` implemented by this crate
 
 #[cfg(feature = "enigo")]
 pub use self::enigo::Enigo;
