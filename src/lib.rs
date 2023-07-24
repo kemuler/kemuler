@@ -47,5 +47,5 @@ pub mod prelude {
 
     pub use input::Input;
     pub use inputs::common::*;
-    pub use simulate::Simulatable;
+    pub use simulate::ReadySimulatable;
 }
