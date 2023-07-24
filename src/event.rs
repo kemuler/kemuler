@@ -11,27 +11,6 @@ pub trait Simulatable<S>: Sized {
     fn run_with(self, simulator: &mut S);
 }
 
-/// Simulatable is a thing that can be simulated by a simulator.
-/// Alternatively called an event.
-/// This is falliable version for [`Simulatable`]
-pub trait TrySimulatable<S>: Sized {
-    type Error;
-    /// Try simulate this input.
-    fn try_run_with(self, simulator: &mut S) -> Result<(), (Self::Error, Self)>;
-}
-
-impl<T, S> TrySimulatable<S> for T
-where
-    S: Simulate<T>,
-{
-    type Error = void::Void;
-
-    fn try_run_with(self, simulator: &mut S) -> Result<(), (Self::Error, Self)> {
-        simulator.run(self);
-        Ok(())
-    }
-}
-
 /// Let [`Simulator`] knows that you want to set the value of an input to a value.
 /// Simulator must support this to be used.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
