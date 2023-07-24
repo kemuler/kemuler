@@ -36,16 +36,9 @@
 //! // (the usual way is still supported)
 //! Enigo.simulate_input(Key::A.down())
 
+pub mod combinator;
 pub mod input;
 pub mod simulate;
 
 pub mod inputs;
 pub mod simulators;
-
-pub mod prelude {
-    use super::*;
-
-    pub use input::InputEvent;
-    pub use inputs::common::*;
-    pub use simulate::ReadySimulatable;
-}

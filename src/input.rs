@@ -4,17 +4,24 @@ use std::fmt;
 
 use crate::simulate::Simulator;
 
-pub trait InputEvent: Sized {
-    /// Simulate input directly.
-    fn run_with<S: Simulator<Self>>(self, simulator: &mut S) {
-        simulator.run(self)
-    }
+pub trait InputEvent<S>: Sized {
+    /// Simulate this input.
+    fn run_with(self, simulator: &mut S);
 }
 
 /// Let [`simulate::Simulator`] knows that you want to toggle a key.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Toggle<I> {
     pub input: I,
+}
+
+impl<I, S> InputEvent<S> for Toggle<I>
+where
+    S: Simulator<Self>,
+{
+    fn run_with(self, simulator: &mut S) {
+        simulator.run(self)
+    }
 }
 
 impl<I> fmt::Display for Toggle<I>
@@ -33,6 +40,15 @@ pub struct SetTo<I, V> {
     pub to: V,
 }
 
+impl<I, V, S> InputEvent<S> for SetTo<I, V>
+where
+    S: Simulator<Self>,
+{
+    fn run_with(self, simulator: &mut S) {
+        simulator.run(self)
+    }
+}
+
 impl<I, V> fmt::Display for SetTo<I, V>
 where
     I: fmt::Display,
@@ -48,6 +64,15 @@ where
 pub struct ChangeBy<I, V> {
     pub input: I,
     pub by: V,
+}
+
+impl<I, V, S> InputEvent<S> for ChangeBy<I, V>
+where
+    S: Simulator<Self>,
+{
+    fn run_with(self, simulator: &mut S) {
+        simulator.run(self)
+    }
 }
 
 impl<I, V> fmt::Display for ChangeBy<I, V>
