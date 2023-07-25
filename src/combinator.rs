@@ -23,10 +23,6 @@ pub trait Combine: Sized {
     fn sleep_ms(self, duration: u64) -> AndThen<Self, Sleep> {
         self.sleep(Duration::from_millis(duration))
     }
-
-    fn only_if(self, condition: bool) -> OnlyIf<Self> {
-        OnlyIf(self, condition)
-    }
 }
 
 impl<T> Combine for T {}
@@ -72,30 +68,64 @@ impl fmt::Display for Sleep {
     }
 }
 
-/// Simulate if the closure evaluated to true
-/// Useful with conditional compilation. Not sure about other stuff.
-pub struct OnlyIf<S>(S, bool);
+macro_rules! tuple_impl {
+    ($($n:tt => $g:ident,)*) => {
+        tuple_impl!{@impl $($n => $g,)*}
+        tuple_impl!{@cut_one $($n => $g,)*}
+    };
+    (@cut_one ) => {};
+    (@cut_one $cn:tt => $cg:ident,) => {};
+    (@cut_one $_n:tt => $_g:ident, $($n:tt => $g:ident,)* ) => {
+        tuple_impl!{@impl $($n => $g,)*}
+        tuple_impl!{@cut_one $($n => $g,)*}
+    };
+    (@impl $($n:tt => $g:ident,)*) => {
+        impl<Smlt, $($g,)*> Simulatable<Smlt> for ($($g,)*)
+        where
+            $(
+                $g: Simulatable<Smlt>,
+            )*
+        {
+            fn run_with(self, simulator: &mut Smlt) {
+                $(
+                    tuple_impl!(@nth $n, self).run_with(simulator);
+                )*
+            }
+        }
+    };
+    (@nth $n:tt, $x:ident) => {
+        ($x.$n)
+    };
+    () => {}
+}
 
-impl<S, Smlt> Simulatable<Smlt> for OnlyIf<S>
+// what a fat one
+tuple_impl! {
+    63 => I63, 62 => I62, 61 => I61, 60 => I60,
+    59 => I59, 58 => I58, 57 => I57, 56 => I56,
+    55 => I55, 54 => I54, 53 => I53, 52 => I52,
+    51 => I51, 50 => I50, 49 => I49, 48 => I48,
+    47 => I47, 46 => I46, 45 => I45, 44 => I44,
+    43 => I43, 42 => I42, 41 => I41, 40 => I40,
+    39 => I39, 38 => I38, 37 => I37, 36 => I36,
+    35 => I35, 34 => I34, 33 => I33, 32 => I32,
+    31 => I31, 30 => I30, 29 => I29, 28 => I28,
+    27 => I27, 26 => I26, 25 => I25, 24 => I24,
+    23 => I23, 22 => I22, 21 => I21, 20 => I20,
+    19 => I19, 18 => I18, 17 => I17, 16 => I16,
+    15 => I15, 14 => I14, 13 => I13, 12 => I12,
+    11 => I11, 10 => I10, 9 => I9, 8 => I8,
+    7 => I7, 6 => I6, 5 => I5, 4 => I4,
+    3 => I3, 2 => I2, 1 => I1, 0 => I0,
+}
+
+impl<Smlt, S, const N: usize> Simulatable<Smlt> for [S; N]
 where
     S: Simulatable<Smlt>,
 {
     fn run_with(self, simulator: &mut Smlt) {
-        if self.1 {
-            self.0.run_with(simulator)
-        }
-    }
-}
-
-impl<S> fmt::Display for OnlyIf<S>
-where
-    S: fmt::Display,
-{
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if self.1 {
-            write!(f, "run {};", self.0)
-        } else {
-            write!(f, "don't run {};", self.0)
+        for s in self.into_iter() {
+            s.run_with(simulator);
         }
     }
 }
