@@ -1,9 +1,17 @@
 [package]
 name = "kemuler"
 version = "0.1.0"
-edition = "2021"
-description = "Experimental high level input simulation tool"
 authors = [ "Multirious" ]
+edition = "2021"
+
+description = "Experimental high level input simulation tool using combinators"
+documentation = "https://docs.rs/kemuler"
+homepage = "https://github.com/Multirious/kemuler"
+repository = "https://github.com/Multirious/kemuler"
+readme = "README.md"
+keywords = ["input", "mouse", "testing", "keyboard", "automation"]
+categories = ["development-tools::testing", "api-bindings", "hardware-support"]
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
