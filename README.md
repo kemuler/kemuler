@@ -9,7 +9,7 @@ Why?
 Combinators!
 
 Current features:
-- Multiple backends support (called `Simulator` in here).
+- Multiple backends support (called simulator in here).
   Built-ins:
   - Enigo (The crate that helped me make this crate and it is cross-platform.)
   - (WIP, seperated branch) Windows (support for Window's DirectX/DirectInput something something game something something)
