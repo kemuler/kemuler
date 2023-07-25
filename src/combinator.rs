@@ -23,6 +23,11 @@ pub trait Combine: Sized {
     fn sleep_ms(self, duration: u64) -> AndThen<Self, Sleep> {
         self.sleep(Duration::from_millis(duration))
     }
+
+    /// Repeat simulation for amount of times
+    fn repeat(self, times: usize) -> Repeat<Self> {
+        Repeat(self, times)
+    }
 }
 
 impl<T> Combine for T {}
@@ -56,6 +61,12 @@ where
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Sleep(Duration);
 
+impl Sleep {
+    pub fn from_ms(ms: u64) -> Sleep {
+        Sleep(Duration::from_millis(ms))
+    }
+}
+
 impl<Smlt> Simulatable<Smlt> for Sleep {
     fn run_with(self, _: &mut Smlt) {
         thread::sleep(self.0);
@@ -65,6 +76,30 @@ impl<Smlt> Simulatable<Smlt> for Sleep {
 impl fmt::Display for Sleep {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "sleep {} ms;", self.0.as_millis())
+    }
+}
+
+/// Simulate an input for amount of times
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Repeat<S>(S, usize);
+
+impl<S, Smlt> Simulatable<Smlt> for Repeat<S>
+where
+    S: Simulatable<Smlt> + Clone,
+{
+    fn run_with(self, simulator: &mut Smlt) {
+        for _ in 0..self.1 {
+            self.0.clone().run_with(simulator)
+        }
+    }
+}
+
+impl<S> fmt::Display for Repeat<S>
+where
+    S: fmt::Display,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{} {} times;", self.0, self.1)
     }
 }
 
