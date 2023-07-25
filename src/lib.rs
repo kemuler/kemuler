@@ -43,7 +43,7 @@
 //!     .then(Key::Tab.up())
 //!     .run_with(&mut enigo);
 //!
-//! // Tuple supports! (up to 64 indexes)
+//! // Tuple supports! (up to 32 indexes)
 //! // If you some how need much more than that then nested tuple will suffice.
 //! (
 //!     Key::Control.down(),
@@ -72,6 +72,7 @@
 //!     .repeat(20)
 //!     .run_with(&mut enigo);
 //! ```
+
 #![cfg_attr(all(doc, CHANNEL_NIGHTLY), feature(doc_auto_cfg))]
 
 pub mod combinator;
@@ -90,3 +91,47 @@ pub mod prelude {
     pub use inputs::common::*;
     pub use simulatable::Simulatable;
 }
+
+// #[test]
+// fn test() {
+
+//     use crate::combinator::IntoSimulatableIter;
+//     use crate as kemuler;
+//     use enigo::{Key, MouseButton};
+//     use kemuler::combinator::Sleep;
+//     use kemuler::prelude::*;
+//     use kemuler::simulators::enigo::{Enigo, EnigoKeyExt};
+
+//     let mut enigo = Enigo::new();
+
+//     let a = Keyboard::Alt
+//         .down()
+//         .then(Keyboard::Tab.down())
+//         .then(Keyboard::Alt.up())
+//         .then(Keyboard::Tab.up());
+//     println!("{a}");
+//     return;
+//     a.run_with(&mut enigo);
+
+//     (
+//         Key::Control.down(),
+//         MouseButton::Right.down(),
+//         Sleep::from_ms(1000),
+//         Key::Control.up(),
+//         MouseButton::Right.up(),
+//     )
+//         .run_with(&mut enigo);
+
+//     [
+//         Key::Alt.down(),
+//         Key::Tab.down(),
+//         Key::Alt.up(),
+//         Key::Tab.up(),
+//     ]
+//     .into_simulatable_iter()
+//     .run_with(&mut enigo);
+
+//     (MouseButton::Left.click(), Key::Space.click().sleep_ms(500))
+//         .repeat(20)
+//         .run_with(&mut enigo);
+// }

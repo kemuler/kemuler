@@ -28,7 +28,17 @@ pub trait Combine: Sized {
     }
 }
 
-impl<T> Combine for T {}
+impl<S> Combine for S {}
+
+/// Helper trait to constrct [`IntoIter`] for iterators
+pub trait IntoSimulatableIter: Sized {
+    /// Simulate items from this iterator
+    fn into_simulatable_iter(self) -> IntoIter<Self> {
+        IntoIter(self)
+    }
+}
+
+impl<I> IntoSimulatableIter for I where I: IntoIterator {}
 
 /// Simulate 2 input consecutively.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -134,14 +144,6 @@ macro_rules! tuple_impl {
 
 // what a fat one
 tuple_impl! {
-    63 => I63, 62 => I62, 61 => I61, 60 => I60,
-    59 => I59, 58 => I58, 57 => I57, 56 => I56,
-    55 => I55, 54 => I54, 53 => I53, 52 => I52,
-    51 => I51, 50 => I50, 49 => I49, 48 => I48,
-    47 => I47, 46 => I46, 45 => I45, 44 => I44,
-    43 => I43, 42 => I42, 41 => I41, 40 => I40,
-    39 => I39, 38 => I38, 37 => I37, 36 => I36,
-    35 => I35, 34 => I34, 33 => I33, 32 => I32,
     31 => I31, 30 => I30, 29 => I29, 28 => I28,
     27 => I27, 26 => I26, 25 => I25, 24 => I24,
     23 => I23, 22 => I22, 21 => I21, 20 => I20,
@@ -152,13 +154,26 @@ tuple_impl! {
     3 => I3, 2 => I2, 1 => I1, 0 => I0,
 }
 
-impl<Smlt, S, const N: usize> Simulatable<Smlt> for [S; N]
+/// Automatically do a for loop on an iterator and simulate for you!
+pub struct IntoIter<I>(I);
+
+impl<I, Smlt> Simulatable<Smlt> for IntoIter<I>
 where
-    S: Simulatable<Smlt>,
+    I: IntoIterator,
+    <I as IntoIterator>::Item: Simulatable<Smlt>,
 {
     fn run_with(self, simulator: &mut Smlt) {
-        for s in self.into_iter() {
+        for s in self.0 {
             s.run_with(simulator);
         }
+    }
+}
+
+impl<S> fmt::Display for IntoIter<S>
+where
+    S: fmt::Display,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "iterate {};", self.0)
     }
 }

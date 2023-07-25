@@ -1,4 +1,4 @@
-//! This module contains the `Simulatable` trait and other things that implements it.
+//! This module contains things that can be simulated
 
 use std::fmt;
 
@@ -6,9 +6,9 @@ use crate::simulator::Simulate;
 
 /// Simulatable is a thing that can be simulated by a simulator.
 /// Alternatively called an event.
-pub trait Simulatable<Sim>: Sized {
+pub trait Simulatable<Smlt>: Sized {
     /// Simulate this input.
-    fn run_with(self, simulator: &mut Sim);
+    fn run_with(self, simulator: &mut Smlt);
 }
 
 /// Let a simulator knows that you want to set the value of an input to a value.
