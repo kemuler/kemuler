@@ -3,12 +3,12 @@
 use core::fmt;
 use std::{thread, time::Duration};
 
-use crate::event::Simulatable;
+use crate::simulatable::Simulatable;
 
 /// Helper combinator trait.
 pub trait Combine: Sized {
     /// `self` and then `next`
-    fn then<I>(self, next: I) -> AndThen<Self, I> {
+    fn then<S>(self, next: S) -> AndThen<Self, S> {
         AndThen(self, next)
     }
 
@@ -33,23 +33,23 @@ impl<T> Combine for T {}
 
 /// Simulate 2 input consecutively.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct AndThen<A, B>(A, B);
+pub struct AndThen<SA, SB>(SA, SB);
 
-impl<A, B, S> Simulatable<S> for AndThen<A, B>
+impl<SA, SB, Sim> Simulatable<Sim> for AndThen<SA, SB>
 where
-    A: Simulatable<S>,
-    B: Simulatable<S>,
+    SA: Simulatable<Sim>,
+    SB: Simulatable<Sim>,
 {
-    fn run_with(self, simulator: &mut S) {
+    fn run_with(self, simulator: &mut Sim) {
         self.0.run_with(simulator);
         self.1.run_with(simulator);
     }
 }
 
-impl<A, B> fmt::Display for AndThen<A, B>
+impl<SA, SB> fmt::Display for AndThen<SA, SB>
 where
-    A: fmt::Display,
-    B: fmt::Display,
+    SA: fmt::Display,
+    SB: fmt::Display,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{};{}", self.0, self.1)
@@ -60,8 +60,8 @@ where
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Sleep(Duration);
 
-impl<S> Simulatable<S> for Sleep {
-    fn run_with(self, _: &mut S) {
+impl<Sim> Simulatable<Sim> for Sleep {
+    fn run_with(self, _: &mut Sim) {
         thread::sleep(self.0);
     }
 }
@@ -74,22 +74,22 @@ impl fmt::Display for Sleep {
 
 /// Simulate if the closure evaluated to true
 /// Useful with conditional compilation. Not sure about other stuff.
-pub struct OnlyIf<T>(T, bool);
+pub struct OnlyIf<S>(S, bool);
 
-impl<T, S> Simulatable<S> for OnlyIf<T>
+impl<S, Sim> Simulatable<Sim> for OnlyIf<S>
 where
-    T: Simulatable<S>,
+    S: Simulatable<Sim>,
 {
-    fn run_with(self, simulator: &mut S) {
+    fn run_with(self, simulator: &mut Sim) {
         if self.1 {
             self.0.run_with(simulator)
         }
     }
 }
 
-impl<T> fmt::Display for OnlyIf<T>
+impl<S> fmt::Display for OnlyIf<S>
 where
-    T: fmt::Display,
+    S: fmt::Display,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if self.1 {

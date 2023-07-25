@@ -1,15 +1,15 @@
 //! Simulate input using `Enigo`.
 
 use crate::{
-    event::{ChangeBy, SetTo},
     inputs::common,
-    simulate::Simulate,
+    simulatable::{ChangeBy, SetTo},
+    simulator::Simulate,
 };
 use enigo::{KeyboardControllable, MouseControllable};
 
 /// Simulate input using `Enigo`.
 ///
-/// Implemented events:
+/// Implemented simulatables:
 /// - `SetTo   <enigo::Key           , bool>`
 /// - `SetTo   <enigo::MouseButton   , bool>`
 /// - `SetTo   <common::MouseButton  , bool>`
@@ -17,7 +17,7 @@ use enigo::{KeyboardControllable, MouseControllable};
 /// - `ChangeBy<common::MousePosition, (i32, i32)>`
 /// - `ChangeBy<common::MouseScroll  , (i32, i32)>`
 #[derive(Debug, Default)]
-pub struct Enigo(enigo::Enigo);
+pub struct Enigo(pub enigo::Enigo);
 
 impl Enigo {
     pub fn new() -> Enigo {
@@ -50,11 +50,11 @@ fn enigoify_common_mouse_button(button: common::MouseButton) -> enigo::MouseButt
 }
 
 impl Simulate<SetTo<enigo::Key, bool>> for Enigo {
-    fn run(&mut self, event: SetTo<enigo::Key, bool>) {
+    fn simulate(&mut self, simulatable: SetTo<enigo::Key, bool>) {
         let SetTo {
             input: key,
             to: is_down,
-        } = event;
+        } = simulatable;
         if is_down {
             self.0.key_down(key)
         } else {
@@ -63,11 +63,11 @@ impl Simulate<SetTo<enigo::Key, bool>> for Enigo {
     }
 }
 impl Simulate<SetTo<enigo::MouseButton, bool>> for Enigo {
-    fn run(&mut self, event: SetTo<enigo::MouseButton, bool>) {
+    fn simulate(&mut self, simulatable: SetTo<enigo::MouseButton, bool>) {
         let SetTo {
             input: button,
             to: is_down,
-        } = event;
+        } = simulatable;
         if is_down {
             self.0.mouse_down(button)
         } else {
@@ -77,8 +77,8 @@ impl Simulate<SetTo<enigo::MouseButton, bool>> for Enigo {
 }
 
 impl Simulate<SetTo<common::MouseButton, bool>> for Enigo {
-    fn run(&mut self, event: SetTo<common::MouseButton, bool>) {
-        let SetTo { input, to: is_down } = event;
+    fn simulate(&mut self, simulatable: SetTo<common::MouseButton, bool>) {
+        let SetTo { input, to: is_down } = simulatable;
         let button = enigoify_common_mouse_button(input);
         if is_down {
             self.0.mouse_down(button)
@@ -89,22 +89,22 @@ impl Simulate<SetTo<common::MouseButton, bool>> for Enigo {
 }
 
 impl Simulate<SetTo<common::MousePosition, (i32, i32)>> for Enigo {
-    fn run(&mut self, event: SetTo<common::MousePosition, (i32, i32)>) {
-        let SetTo { input: _, to } = event;
+    fn simulate(&mut self, simulatable: SetTo<common::MousePosition, (i32, i32)>) {
+        let SetTo { input: _, to } = simulatable;
         self.0.mouse_move_to(to.0, to.1)
     }
 }
 
 impl Simulate<ChangeBy<common::MousePosition, (i32, i32)>> for Enigo {
-    fn run(&mut self, event: ChangeBy<common::MousePosition, (i32, i32)>) {
-        let ChangeBy { input: _, by } = event;
+    fn simulate(&mut self, simulatable: ChangeBy<common::MousePosition, (i32, i32)>) {
+        let ChangeBy { input: _, by } = simulatable;
         self.0.mouse_move_relative(by.0, by.1)
     }
 }
 
 impl Simulate<ChangeBy<common::MouseScroll, (i32, i32)>> for Enigo {
-    fn run(&mut self, event: ChangeBy<common::MouseScroll, (i32, i32)>) {
-        let ChangeBy { input: _, by } = event;
+    fn simulate(&mut self, simulatable: ChangeBy<common::MouseScroll, (i32, i32)>) {
+        let ChangeBy { input: _, by } = simulatable;
         if by.0 != 0 {
             self.0.mouse_scroll_x(by.0);
         }

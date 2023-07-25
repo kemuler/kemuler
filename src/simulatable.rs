@@ -2,7 +2,7 @@
 
 use std::fmt;
 
-use crate::simulate::Simulate;
+use crate::simulator::Simulate;
 
 /// Simulatable is a thing that can be simulated by a simulator.
 /// Alternatively called an event.
@@ -24,7 +24,7 @@ where
     S: Simulate<Self>,
 {
     fn run_with(self, simulator: &mut S) {
-        simulator.run(self)
+        simulator.simulate(self)
     }
 }
 
@@ -51,7 +51,7 @@ where
     S: Simulate<Self>,
 {
     fn run_with(self, simulator: &mut S) {
-        simulator.run(self)
+        simulator.simulate(self)
     }
 }
 

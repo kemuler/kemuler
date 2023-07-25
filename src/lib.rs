@@ -54,8 +54,8 @@
 #![cfg_attr(all(doc, CHANNEL_NIGHTLY), feature(doc_auto_cfg))]
 
 pub mod combinator;
-pub mod event;
-pub mod simulate;
+pub mod simulatable;
+pub mod simulator;
 
 pub mod inputs;
 pub mod simulators;
@@ -66,6 +66,6 @@ pub mod prelude {
     use super::*;
 
     pub use combinator::Combine;
-    pub use event::Simulatable;
     pub use inputs::common::*;
+    pub use simulatable::Simulatable;
 }
