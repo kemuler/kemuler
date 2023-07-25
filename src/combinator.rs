@@ -35,12 +35,12 @@ impl<T> Combine for T {}
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct AndThen<SA, SB>(SA, SB);
 
-impl<SA, SB, Sim> Simulatable<Sim> for AndThen<SA, SB>
+impl<SA, SB, Smlt> Simulatable<Smlt> for AndThen<SA, SB>
 where
-    SA: Simulatable<Sim>,
-    SB: Simulatable<Sim>,
+    SA: Simulatable<Smlt>,
+    SB: Simulatable<Smlt>,
 {
-    fn run_with(self, simulator: &mut Sim) {
+    fn run_with(self, simulator: &mut Smlt) {
         self.0.run_with(simulator);
         self.1.run_with(simulator);
     }
@@ -60,8 +60,8 @@ where
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Sleep(Duration);
 
-impl<Sim> Simulatable<Sim> for Sleep {
-    fn run_with(self, _: &mut Sim) {
+impl<Smlt> Simulatable<Smlt> for Sleep {
+    fn run_with(self, _: &mut Smlt) {
         thread::sleep(self.0);
     }
 }
@@ -76,11 +76,11 @@ impl fmt::Display for Sleep {
 /// Useful with conditional compilation. Not sure about other stuff.
 pub struct OnlyIf<S>(S, bool);
 
-impl<S, Sim> Simulatable<Sim> for OnlyIf<S>
+impl<S, Smlt> Simulatable<Smlt> for OnlyIf<S>
 where
-    S: Simulatable<Sim>,
+    S: Simulatable<Smlt>,
 {
-    fn run_with(self, simulator: &mut Sim) {
+    fn run_with(self, simulator: &mut Smlt) {
         if self.1 {
             self.0.run_with(simulator)
         }

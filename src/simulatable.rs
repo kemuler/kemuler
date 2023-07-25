@@ -19,11 +19,11 @@ pub struct SetTo<I, V> {
     pub to: V,
 }
 
-impl<I, V, S> Simulatable<S> for SetTo<I, V>
+impl<I, V, Smlt> Simulatable<Smlt> for SetTo<I, V>
 where
-    S: Simulate<Self>,
+    Smlt: Simulate<Self>,
 {
-    fn run_with(self, simulator: &mut S) {
+    fn run_with(self, simulator: &mut Smlt) {
         simulator.simulate(self)
     }
 }
@@ -46,11 +46,11 @@ pub struct ChangeBy<I, V> {
     pub by: V,
 }
 
-impl<I, V, S> Simulatable<S> for ChangeBy<I, V>
+impl<I, V, Smlt> Simulatable<Smlt> for ChangeBy<I, V>
 where
-    S: Simulate<Self>,
+    Smlt: Simulate<Self>,
 {
-    fn run_with(self, simulator: &mut S) {
+    fn run_with(self, simulator: &mut Smlt) {
         simulator.simulate(self)
     }
 }
