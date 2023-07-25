@@ -31,6 +31,10 @@ pub enum Keyboard {
 
 impl Keyboard {
     /// Set this key
+    /// This is a convenience shorthand for
+    /// ```
+    /// SetTo { input: self, to: to }
+    /// ```
     pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
         SetTo { input: self, to }
     }
