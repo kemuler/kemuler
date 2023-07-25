@@ -10,9 +10,9 @@
 //!
 //! Current features:
 //! - Multiple backends support (called `Simulator` in here).
-//!   Built-ins:
+//!   Built-ins (that's one thing, i know, wip :V):
 //!   - Enigo (The crate that helped me make this crate and it is cross-platform.)
-//!   - Windows (support for Window's DirectX/DirectInput something something game something something)
+//!   - (WIP, seperated branch) Windows (support for Window's DirectX/DirectInput something something game something something)
 //! - Combinator
 //!
 //! Some drawbacks:
