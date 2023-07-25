@@ -1,11 +1,40 @@
 //! Simulate input using `Enigo`.
 
 use crate::{
+    combinator::{AndThen, Combine},
     inputs::common,
     simulatable::{ChangeBy, SetTo},
     simulator::Simulate,
 };
 use enigo::{KeyboardControllable, MouseControllable};
+
+pub trait EnigoKeyExt: Sized + Clone {
+    /// Set this button.
+    fn set_to(self, to: bool) -> SetTo<Self, bool> {
+        SetTo { input: self, to }
+    }
+
+    /// Press the button.
+    /// This is a convenience shorthand, see code for more details.
+    fn down(self) -> SetTo<Self, bool> {
+        self.set_to(true)
+    }
+
+    /// Release the button.
+    /// This is a convenience shorthand, see code for more details.
+    fn up(self) -> SetTo<Self, bool> {
+        self.set_to(false)
+    }
+
+    /// Press and release the button.
+    /// This is a convenience shorthand, see code for more details.
+    fn click(self) -> AndThen<SetTo<Self, bool>, SetTo<Self, bool>> {
+        self.clone().down().then(self.up())
+    }
+}
+
+impl EnigoKeyExt for enigo::Key {}
+impl EnigoKeyExt for enigo::MouseButton {}
 
 /// Simulate input using `Enigo`.
 ///
