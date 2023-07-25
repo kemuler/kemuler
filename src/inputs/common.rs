@@ -1,4 +1,7 @@
 //! Generally found/a standard input
+//!
+//! This is currently pretty much incomplete.
+//! Prefer `enigo` and their `Key` and `MouseButton` for most cases.
 
 use crate::{combinator::*, simulatable::*};
 use std::fmt;
@@ -7,13 +10,9 @@ use std::fmt;
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Keyboard {
-    A, B, C, D, E, F, G, H, I, J, K, L, M,
-    N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
-
-    Num0, Num1, Num2, Num3, Num4, Num5, Num6, Num7, Num8, Num9,
-
     /// alt key on Linux and Windows (option key on macOS)
-    Alt, LAlt, RAlt,
+    // Alt, LAlt, RAlt,
+    Alt,
     Shift, LShift, RShift,
     Control, LControl, RControl,
 
@@ -37,15 +36,33 @@ impl Keyboard {
     }
 
     /// Press the key.
-    /// This is a convenience shorthand, see code for more details.
+    /// This is a convenience shorthand for
+    /// ```
+    /// SetTo { input: self, to: true }
+    /// ```
     pub fn down(self) -> SetTo<Self, bool> {
         self.set_to(true)
     }
 
     /// Release the key
-    /// This is a convenience shorthand, see code for more details.
+    /// This is a convenience shorthand for
+    /// ```
+    /// SetTo { input: self, to: false }
+    /// ```
     pub fn up(self) -> SetTo<Self, bool> {
         self.set_to(false)
+    }
+
+    /// Press and release the key.
+    /// This is a convenience shorthand for
+    /// ```
+    /// AndThen(
+    ///     SetTo { input: self, to: true },
+    ///     SetTo { input: self, to: false }
+    /// )
+    /// ```
+    pub fn click(self) -> AndThen<SetTo<Self, bool>, SetTo<Self, bool>> {
+        self.down().then(self.up())
     }
 }
 
@@ -59,6 +76,11 @@ impl fmt::Display for Keyboard {
 pub struct MousePosition;
 
 impl MousePosition {
+    /// Move mouse to x, y
+    /// This is a convenience shorthand for
+    /// ```
+    /// SetTo { input: self, to: (x, y) }
+    /// ```
     pub fn move_to(self, x: i32, y: i32) -> SetTo<Self, (i32, i32)> {
         SetTo {
             input: self,
@@ -66,6 +88,11 @@ impl MousePosition {
         }
     }
 
+    /// Move mouse by x, y (move mouse relatively)
+    /// This is a convenience shorthand for
+    /// ```
+    /// ChangeBy { input: self, by: (x, y) }
+    /// ```
     pub fn move_by(self, x: i32, y: i32) -> ChangeBy<Self, (i32, i32)> {
         ChangeBy {
             input: self,
@@ -84,7 +111,11 @@ impl fmt::Display for MousePosition {
 pub struct MouseScroll;
 
 impl MouseScroll {
-    /// Scroll mouse wheel.
+    /// Scroll mouse wheel by x, y.
+    /// This is a convenience shorthand for
+    /// ```
+    /// ChangeBy { input: self, by: (x, y) }
+    /// ```
     pub fn scroll_by(self, x: i32, y: i32) -> ChangeBy<Self, (i32, i32)> {
         ChangeBy {
             input: self,
@@ -100,6 +131,7 @@ impl fmt::Display for MouseScroll {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
 pub enum MouseButton {
     Left,
     Middle,
@@ -108,24 +140,40 @@ pub enum MouseButton {
 
 impl MouseButton {
     /// Set this button.
+    /// This is a convenience shorthand for
+    /// ```
+    /// SetTo { input: self, to: to }
+    /// ```
     pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
         SetTo { input: self, to }
     }
 
     /// Press the button.
-    /// This is a convenience shorthand, see code for more details.
+    /// This is a convenience shorthand for
+    /// ```
+    /// SetTo { input: self, to: true }
+    /// ```
     pub fn down(self) -> SetTo<Self, bool> {
         self.set_to(true)
     }
 
     /// Release the button.
-    /// This is a convenience shorthand, see code for more details.
+    /// This is a convenience shorthand for
+    /// ```
+    /// SetTo { input: self, to: false }
+    /// ```
     pub fn up(self) -> SetTo<Self, bool> {
         self.set_to(false)
     }
 
     /// Press and release the button.
-    /// This is a convenience shorthand, see code for more details.
+    /// This is a convenience shorthand for
+    /// ```
+    /// AndThen(
+    ///     SetTo { input: self, to: true },
+    ///     SetTo { input: self, to: false }
+    /// )
+    /// ```
     pub fn click(self) -> AndThen<SetTo<Self, bool>, SetTo<Self, bool>> {
         self.down().then(self.up())
     }

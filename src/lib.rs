@@ -4,7 +4,7 @@
 //!
 //! This crate offers a different kind of high level input simulator framework,
 //! utilizing Rust’s type system to its full potential (or just over-engineered)
-//! instead of the usual key_down(Key).
+//! instead of the usual `key_down(Key)`.
 //! Why?
 //! Combinators!
 //!
@@ -12,14 +12,14 @@
 //! - Multiple backends support (called `Simulator` in here).
 //!   Built-ins:
 //!   - Enigo (The crate that helped me make this crate and it is cross-platform.)
-//!   - WinDirect (support for Window's DirectX/DirectInput something)
+//!   - Windows (support for Window's DirectX/DirectInput something something game something something)
 //! - Combinator
 //!
 //! Some drawbacks:
-//! - Combinator currently can only combine for the same `Simulator`.
-//!   Seperated branch for any `Simulator` combinator is on GitHub.
+//! - Combinator currently can only combine for the same simulator;
+//!   any simulator combinator is currently on a separated branch.
 //! - Only a few amount of combinators is present.
-//!   If you got some more useful combinator, please submit an issue on `GitHub`!
+//!   If you've got some more useful combinator, please submit an issue on `GitHub`!
 //!
 //! # Examples
 //! All these examples requires the feature "enigo".
@@ -29,7 +29,7 @@
 #![cfg_attr(feature = "enigo", doc = "```")]
 #![cfg_attr(not(feature = "enigo"), doc = "```ignore")]
 //! use kemuler::prelude::*;
-//! use kemuler::simulators::{Enigo, EnigoKeyExt};
+//! use kemuler::simulators::enigo::{enigo, Enigo, EnigoKeyExt};
 //! use enigo::{Key, MouseButton};
 //!
 //! let mut enigo = Enigo::new();
@@ -53,7 +53,7 @@
 #![cfg_attr(feature = "enigo", doc = "```")]
 #![cfg_attr(not(feature = "enigo"), doc = "```ignore")]
 //! use kemuler::prelude::*;
-//! use kemuler::simulators::{Enigo, EnigoKeyExt};
+//! use kemuler::simulators::enigo::{enigo, Enigo, EnigoKeyExt};
 //! use enigo::{Key, MouseButton};
 //! use kemuler::combinator::Sleep;
 //!
@@ -84,10 +84,24 @@
 //! ].run_with(&mut enigo);
 //!
 //! // Other useful combinators!
+//!
+//! // do these 20 times:
+//! //   left click
+//! //   space bar click
+//! //   wait 500 millisecond
+//! //
 //! (MouseButton::Left.click(), Key::Space.click().sleep_ms(500))
 //!     .repeat(20)
 //!     .run_with(&mut enigo);
 //! ```
+//!
+//! # Why is it experimental?
+//! This crate doesn't really solve any problem other than just easier to do
+//! input simulation (maybe that will be the selling point).
+//! It's also fresh out so some breaking changes might occur in the future.
+//! This crate is just me playing around with the language.
+//! We'll see if this crate will actually get any traction.
+//! If it did, then experimental tag will be remove lol.
 #![cfg_attr(all(doc, CHANNEL_NIGHTLY), feature(doc_auto_cfg))]
 
 pub mod combinator;

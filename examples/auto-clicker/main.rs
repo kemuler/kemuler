@@ -1,4 +1,4 @@
-use kemuler::{prelude::*, simulators::Enigo};
+use kemuler::{prelude::*, simulators::enigo::Enigo};
 use std::io::stdin;
 
 fn prompt<T>(message: &str) -> T

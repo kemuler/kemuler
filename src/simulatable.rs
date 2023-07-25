@@ -11,8 +11,8 @@ pub trait Simulatable<Sim>: Sized {
     fn run_with(self, simulator: &mut Sim);
 }
 
-/// Let [`Simulator`] knows that you want to set the value of an input to a value.
-/// Simulator must support this to be used.
+/// Let a simulator knows that you want to set the value of an input to a value.
+/// The simulator must support this to be used.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SetTo<I, V> {
     pub input: I,
@@ -38,8 +38,8 @@ where
     }
 }
 
-/// Let [`Simulator`] knows that you want to change the value of an input by a value.
-/// Simulator must support this to be used.
+/// Let simulator knows that you want to change the value of an input by a value.
+/// The simulator must support this to be used.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ChangeBy<I, V> {
     pub input: I,

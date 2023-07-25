@@ -7,19 +7,17 @@ use crate::simulatable::Simulatable;
 
 /// Helper combinator trait.
 pub trait Combine: Sized {
-    /// `self` and then `next`
+    /// Simulate `self` and then `next`
     fn then<S>(self, next: S) -> AndThen<Self, S> {
         AndThen(self, next)
     }
 
-    /// `self` and then sleep for amount of time
-    /// This is a convenience shorthand, see code for more details.
+    /// Simulate `self` and then sleep for amount of time
     fn sleep(self, duration: Duration) -> AndThen<Self, Sleep> {
         self.then(Sleep(duration))
     }
 
-    /// `self` and then sleep for amount of time in milliseconds
-    /// This is a convenience shorthand, see code for more details.
+    /// Simulate `self` and then sleep for amount of time in milliseconds
     fn sleep_ms(self, duration: u64) -> AndThen<Self, Sleep> {
         self.sleep(Duration::from_millis(duration))
     }
@@ -34,7 +32,7 @@ impl<T> Combine for T {}
 
 /// Simulate 2 input consecutively.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct AndThen<SA, SB>(SA, SB);
+pub struct AndThen<SA, SB>(pub SA, pub SB);
 
 impl<SA, SB, Smlt> Simulatable<Smlt> for AndThen<SA, SB>
 where
@@ -59,7 +57,7 @@ where
 
 /// Thread sleep for amount of time.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Sleep(Duration);
+pub struct Sleep(pub Duration);
 
 impl Sleep {
     pub fn from_ms(ms: u64) -> Sleep {
@@ -81,7 +79,7 @@ impl fmt::Display for Sleep {
 
 /// Simulate an input for amount of times
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Repeat<S>(S, usize);
+pub struct Repeat<S>(pub S, pub usize);
 
 impl<S, Smlt> Simulatable<Smlt> for Repeat<S>
 where
