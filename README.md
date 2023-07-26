@@ -27,4 +27,4 @@ input simulation (maybe that will be the selling point).
 It's also fresh out so some breaking changes might occur in the future.
 This crate is just me playing around with the language.
 We'll see if this crate will actually get any traction.
-If it did, then experimental tag will be remove lol.
+If it did, then experimental tag will be stripped lol.
