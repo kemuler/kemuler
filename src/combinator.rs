@@ -26,19 +26,17 @@ pub trait Combine: Sized {
     fn repeat(self, times: usize) -> Repeat<Self> {
         Repeat(self, times)
     }
-}
 
-impl<S> Combine for S {}
-
-/// Helper trait to constrct [`IntoIter`] for iterators
-pub trait IntoSimulatableIter: Sized {
-    /// Simulate items from this iterator
-    fn into_simulatable_iter(self) -> IntoIter<Self> {
-        IntoIter(self)
+    /// Iterate through an iterator and simulate each item
+    fn into_simulatable_iter(self) -> IntoSimulatableIter<Self>
+    where
+        Self: Iterator,
+    {
+        IntoSimulatableIter(self)
     }
 }
 
-impl<I> IntoSimulatableIter for I where I: IntoIterator {}
+impl<S> Combine for S {}
 
 /// Simulate 2 input consecutively.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -155,9 +153,9 @@ tuple_impl! {
 }
 
 /// Automatically do a for loop on an iterator and simulate for you!
-pub struct IntoIter<I>(I);
+pub struct IntoSimulatableIter<I>(I);
 
-impl<I, Smlt> Simulatable<Smlt> for IntoIter<I>
+impl<I, Smlt> Simulatable<Smlt> for IntoSimulatableIter<I>
 where
     I: IntoIterator,
     <I as IntoIterator>::Item: Simulatable<Smlt>,
@@ -169,7 +167,7 @@ where
     }
 }
 
-impl<S> fmt::Display for IntoIter<S>
+impl<S> fmt::Display for IntoSimulatableIter<S>
 where
     S: fmt::Display,
 {
