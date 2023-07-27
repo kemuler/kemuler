@@ -47,7 +47,7 @@ Currently there are only a few amount of combinators is present.
 If you've got some more useful combinator, please submit an issue on [GitHub](kemuler_repo)!
 
 # Simulators
-Simulators that is being maintained by this crate.
+Simulators that are being maintained by this crate.
 
 ## Enigo
 Cross-platform input simulator.
