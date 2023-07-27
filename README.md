@@ -43,33 +43,33 @@ let mut s = SomeSimulator::new();
 // not from a trait. They return something that the `Combine` trait can work with.
 ````
 
-Currently there are only a few amount of combinators is present.
+Currently, there are only a few amount of combinators present.
 If you've got some more useful combinator, please submit an issue on [GitHub](kemuler_repo)!
 
 # Simulators
 Simulators that are being maintained by this crate.
 
 ## Enigo
-Cross-platform input simulator.
+**Cross-platform input simulator.**
 
 Support for [`enigo`](enigo_repo).
 This is the og crate that helpd me make this crate.
 
 ## Windows
-WIP, currently on the branch `windows`.
+*WIP, currently on the branch `windows`.*
 
-Windows input simulator.
-An improvement over [`enigo`](enigo_repo)'s Windows implementation.
+**Windows input simulator.**
+An improvement over `enigo`'s Windows implementation.
 
-Differences to [`enigo`](enigo_repo):
+Differences to `enigo`:
   Mouse input will work on application (mostly games)
-  that uses DirectX/DirectInput/somethingsomething;
-  that is currently not the case on [`enigo`](enigo_repo).
-  See [issue](https://github.com/enigo-rs/enigo/issues/172).
+  that uses DirectX/DirectInput/*somethingsomething*;
+  that is currently not the case on `enigo`.
+  See [issue](https://github.com/enigo-rs/enigo/issues/172/).
 
   `VirtualKey` enum's variants are more easier to search for.
   They had more intuitive names and doc aliases are added.
-  More detailed documentation is included.
+  More detailed documentation is also written.
 
-- [enigo_repo]: https://github.com/enigo-rs/enigo "Enigo Repository"
-- [kemuler_repo]: https://github.com/Multirious/kemuler "Kemuler Repository"
+[enigo_repo]: https://github.com/enigo-rs/enigo/ "Enigo Repository"
+[kemuler_repo]: https://github.com/Multirious/kemuler/ "Kemuler Repository"
