@@ -3,7 +3,7 @@
 Welcome to `kemuler`!
 
 This crate offers a different kind of high level input simulator framework,
-utilizing Rust’s type system to its full potential (or just over-engineered)
+utilizing Rust’s type system to its full potential *(or just over-engineered)*
 instead of the usual `key_down(Key)`.
 
 Why? Combinators!
