@@ -1,6 +1,6 @@
 # `kemuler`
 
-Welcome to an experimental input simulation crate, `kemuler`!
+Welcome to an input simulation crate, `kemuler`!
 
 This crate offers a different kind of high level input simulator framework,
 utilizing Rust’s type system to its full potential (or just over-engineered)
@@ -11,9 +11,9 @@ Combinators!
 Current features:
 - Multiple backends support (called simulator in here).
   Built-ins:
-  - Enigo (The crate that helped me make this crate and it is cross-platform.)
-  - (WIP, seperated branch) Windows (support for Window's DirectX/DirectInput something something game something something)
-- Combinator
+  - Enigo,
+  - Windows (WIP),
+- Combinators
 
 Some drawbacks:
 - Combinator currently can only combine for the same simulator;
@@ -21,10 +21,23 @@ Some drawbacks:
 - Only a few amount of combinators is present.
   If you've got some more useful combinator, please submit an issue on `GitHub`!
 
-# Why is it experimental?
-This crate doesn't really solve any problem other than just easier to do
-input simulation (maybe that will be the selling point).
-It's also fresh out so some breaking changes might occur in the future.
-This crate is just me playing around with the language.
-We'll see if this crate will actually get any traction.
-If it did, then experimental tag will be stripped lol.
+# Simulators
+Simulators that is maintain by this crate.
+
+## Enigo
+This is the og crate that helpd me make this crate.
+It is cross-platform.
+
+## Windows (WIP)
+Currently on branch `windows`.
+Simulator Windows
+
+Has some slight improvement from Enigo which is:
+  Mouse input will work on application (mostly games)
+  that uses DirectX/DirectInput/somethingsomething;
+  that is currently not the case on Enigo.
+
+  Better documentation.
+  `VirtualKey` enum's variants is more easier to search for.
+  They had more intuitive names and doc aliases are added.
+  More detailed documentation is included.
