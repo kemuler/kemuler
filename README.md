@@ -19,7 +19,7 @@ let mut s = SomeSimulator::new();
 
     Key::O.click() // a click is key down then key up,
     Key::H.down(),
-    Key::H.up() // these are same as Key::H.click(),
+    Key::H.up() // these are the same as Key::H.click(),
 
     Sleep::from_ms(25), // sleep 25 milliseconds
 
@@ -29,8 +29,9 @@ let mut s = SomeSimulator::new();
     Key::E.click(),
     {
       println!("hello there.");
-      println!("maybe use this unintentional feature to debug or something.");
-      println!("`()` does nothing but can run.");
+      // statement returns ()
+      // and that does nothing but supported.
+      // you can debug or something like this.
     },
     Key::A.click();
     Key::H.click().repeat(5) // repeat anything before the `.repeat` 5 times,
