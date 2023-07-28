@@ -36,7 +36,7 @@ let mut s = SomeSimulator::new();
     Key::A.click();
     Key::H.click().repeat(5) // repeat anything before the `.repeat` 5 times,
 
-    Key::Up.down(),
+    Key::Shift.up(),
 ).run_with(&mut s)
 // this typed the message: "OH YEAHHHHH"
 
