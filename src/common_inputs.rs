@@ -33,7 +33,11 @@ impl Key {
     /// Set this key
     /// This is a convenience shorthand for
     /// ```
-    /// SetTo { input: self, to: to }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Key::Alt;
+    /// # let to = true;
+    /// SetTo { input: this, to: to }
+    /// # ;
     /// ```
     pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
         SetTo { input: self, to }
@@ -42,7 +46,10 @@ impl Key {
     /// Press the key.
     /// This is a convenience shorthand for
     /// ```
-    /// SetTo { input: self, to: true }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Key::Alt;
+    /// SetTo { input: this, to: true }
+    /// # ;
     /// ```
     pub fn down(self) -> SetTo<Self, bool> {
         self.set_to(true)
@@ -51,7 +58,10 @@ impl Key {
     /// Release the key
     /// This is a convenience shorthand for
     /// ```
-    /// SetTo { input: self, to: false }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Key::Alt;
+    /// SetTo { input: this, to: false }
+    /// # ;
     /// ```
     pub fn up(self) -> SetTo<Self, bool> {
         self.set_to(false)
@@ -60,10 +70,13 @@ impl Key {
     /// Press and release the key.
     /// This is a convenience shorthand for
     /// ```
-    /// AndThen(
-    ///     SetTo { input: self, to: true },
-    ///     SetTo { input: self, to: false }
-    /// )
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Key::Alt;
+    /// (
+    ///     SetTo { input: this, to: true },
+    ///     SetTo { input: this, to: false }
+    /// ).seq()
+    /// # ;
     /// ```
     pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
         self.down().then(self.up())
@@ -83,7 +96,12 @@ impl MousePosition {
     /// Move mouse to x, y
     /// This is a convenience shorthand for
     /// ```
-    /// SetTo { input: self, to: (x, y) }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = MousePosition;
+    /// # let x = 10i32;
+    /// # let y = 10i32;
+    /// SetTo { input: this, to: (x, y) }
+    /// # ;
     /// ```
     pub fn move_to(self, x: i32, y: i32) -> SetTo<Self, (i32, i32)> {
         SetTo {
@@ -95,7 +113,12 @@ impl MousePosition {
     /// Move mouse by x, y (move mouse relatively)
     /// This is a convenience shorthand for
     /// ```
-    /// ChangeBy { input: self, by: (x, y) }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = MousePosition;
+    /// # let x = 10i32;
+    /// # let y = 10i32;
+    /// ChangeBy { input: this, by: (x, y) }
+    /// # ;
     /// ```
     pub fn move_by(self, x: i32, y: i32) -> ChangeBy<Self, (i32, i32)> {
         ChangeBy {
@@ -118,7 +141,12 @@ impl MouseScroll {
     /// Scroll mouse wheel by x, y.
     /// This is a convenience shorthand for
     /// ```
-    /// ChangeBy { input: self, by: (x, y) }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = MouseScroll;
+    /// # let x = 10i32;
+    /// # let y = 10i32;
+    /// ChangeBy { input: this, by: (x, y) }
+    /// # ;
     /// ```
     pub fn scroll_by(self, x: i32, y: i32) -> ChangeBy<Self, (i32, i32)> {
         ChangeBy {
@@ -146,7 +174,11 @@ impl MouseButton {
     /// Set this button.
     /// This is a convenience shorthand for
     /// ```
-    /// SetTo { input: self, to: to }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = MouseButton::Left;
+    /// # let to = true;
+    /// SetTo { input: this, to: to }
+    /// # ;
     /// ```
     pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
         SetTo { input: self, to }
@@ -155,7 +187,9 @@ impl MouseButton {
     /// Press the button.
     /// This is a convenience shorthand for
     /// ```
-    /// SetTo { input: self, to: true }
+    /// # let this = MouseButton::Left;
+    /// SetTo { input: this, to: true }
+    /// # ;
     /// ```
     pub fn down(self) -> SetTo<Self, bool> {
         self.set_to(true)
@@ -164,7 +198,10 @@ impl MouseButton {
     /// Release the button.
     /// This is a convenience shorthand for
     /// ```
-    /// SetTo { input: self, to: false }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = MouseButton::Left;
+    /// SetTo { input: this, to: false }
+    /// # ;
     /// ```
     pub fn up(self) -> SetTo<Self, bool> {
         self.set_to(false)
@@ -173,10 +210,13 @@ impl MouseButton {
     /// Press and release the button.
     /// This is a convenience shorthand for
     /// ```
-    /// AndThen(
-    ///     SetTo { input: self, to: true },
-    ///     SetTo { input: self, to: false }
-    /// )
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = MouseButton::Left;
+    /// (
+    ///     SetTo { input: this, to: true },
+    ///     SetTo { input: this, to: false }
+    /// ).seq()
+    /// # ;
     /// ```
     pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
         self.down().then(self.up())
