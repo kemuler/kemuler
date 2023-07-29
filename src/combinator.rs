@@ -114,13 +114,24 @@ where
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Sequence<T>(T);
 
+/// put statments in reverse order
+macro_rules! reverse_order {
+    () => {};
+    (
+        $stmt:stmt; $($repeat_stmt:stmt;)*
+    ) => {
+        reverse_order!($($repeat_stmt;)*);
+        $stmt
+    };
+}
+
+/// implement sequence for n amount of tuples
 macro_rules! tuple_impl {
     ($($n:tt => $g:ident,)*) => {
         tuple_impl!{@impl $($n => $g,)*}
         tuple_impl!{@cut_one $($n => $g,)*}
     };
-    (@cut_one ) => {};
-    (@cut_one $cn:tt => $cg:ident,) => {};
+    (@cut_one) => {};
     (@cut_one $_n:tt => $_g:ident, $($n:tt => $g:ident,)* ) => {
         tuple_impl!{@impl $($n => $g,)*}
         tuple_impl!{@cut_one $($n => $g,)*}
@@ -132,11 +143,14 @@ macro_rules! tuple_impl {
                 $g: Simulatable<Smlt>,
             )*
         {
+            #[allow(unused)]
             fn run_with(self, simulator: &mut Smlt) {
                 let inner= self.0;
-                $(
-                    tuple_impl!(@nth inner, $n).run_with(simulator);
-                )*
+                reverse_order!(
+                    $(
+                        tuple_impl!(@nth inner, $n).run_with(simulator);
+                    )*
+                );
             }
         }
 
@@ -146,11 +160,14 @@ macro_rules! tuple_impl {
                 $g: fmt::Display,
             )*
         {
+            #[allow(unused)]
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
                 let inner = &self.0;
-                $(
-                    write!(f, "{}", tuple_impl!(@nth inner, $n))?;
-                )*
+                reverse_order!(
+                    $(
+                        write!(f, "{}", tuple_impl!(@nth inner, $n))?;
+                    )*
+                );
                 Ok(())
             }
         }
