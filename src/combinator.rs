@@ -5,6 +5,9 @@ use std::{thread, time::Duration};
 
 use crate::{input_event::Invert, simulatable::Simulatable};
 
+#[cfg(test)]
+mod test;
+
 /// Helper combinator trait.
 pub trait Combine: Sized {
     /// Simulate `self` and then `next`
