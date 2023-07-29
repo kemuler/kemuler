@@ -2,7 +2,14 @@ use std::fmt;
 
 use crate::{common_inputs, input_event::*, simulator::Simulate};
 
-/// Mock simulator to be used with testing.
+#[macro_export]
+macro_rules! assert_event {
+    ($logger:ident, $idx:expr, $event:expr) => {
+        ::std::assert_eq!($logger.data[$idx], ::std::format!("{:?}", $event));
+    };
+}
+
+/// Mocked simulator to be used with testing.
 ///
 /// Implemented simulatables:
 /// - `SetTo   <enigo::Key                  , bool>`
@@ -14,7 +21,7 @@ use crate::{common_inputs, input_event::*, simulator::Simulate};
 /// - `ChangeBy<common_inputs::MouseScroll  , (i32, i32)>`
 #[derive(Debug, Default, PartialEq, Eq, PartialOrd, Ord, Clone, Hash)]
 pub struct StringEventLogger {
-    data: Vec<String>,
+    pub data: Vec<String>,
 }
 
 impl StringEventLogger {
