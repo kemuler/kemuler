@@ -1,6 +1,4 @@
-//! Module of simulaties
-
-// (is it bit empty? yeah. it's reserved for other wip branches)
+//! Module for implementing a simulator
 
 /// Trait to implement for a simulator.
 /// It may support many type of input (`E`).

@@ -76,6 +76,7 @@
 #![cfg_attr(all(doc, CHANNEL_NIGHTLY), feature(doc_auto_cfg))]
 
 pub mod combinator;
+pub mod input_event;
 pub mod simulatable;
 pub mod simulator;
 
@@ -135,3 +136,13 @@ pub mod prelude {
 //         .repeat(20)
 //         .run_with(&mut enigo);
 // }
+
+#[test]
+fn test_display() {
+    use crate as kemuler;
+    use kemuler::prelude::*;
+    // use kemuler::simulators::enigo::Enigo;
+    // let e = Enigo::new();
+    let alt_tab = Key::Tab.click().during(Key::Alt.down());
+    println!("{}", alt_tab);
+}

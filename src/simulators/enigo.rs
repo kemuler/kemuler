@@ -1,9 +1,9 @@
 //! Simulate input using `Enigo`.
 
 use crate::{
-    combinator::{AndThen, Combine},
+    combinator::{Combine, Sequence},
+    input_event::*,
     inputs::common,
-    simulatable::{ChangeBy, SetTo},
     simulator::Simulate,
 };
 use enigo::{KeyboardControllable, MouseControllable};
@@ -47,7 +47,7 @@ pub trait EnigoKeyExt: Sized + Clone {
     ///     SetTo { input: self, to: false }
     /// )
     /// ```
-    fn click(self) -> AndThen<SetTo<Self, bool>, SetTo<Self, bool>> {
+    fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
         self.clone().down().then(self.up())
     }
 }
@@ -98,44 +98,38 @@ fn enigoify_common_mouse_button(button: common::MouseButton) -> enigo::MouseButt
     }
 }
 
-fn enigoify_common_keyboard(keyboard: common::Keyboard) -> enigo::Key {
+fn enigoify_common_keyboard(keyboard: common::Key) -> enigo::Key {
     match keyboard {
-        common::Keyboard::Alt => enigo::Key::Alt,
-        // common::Keyboard::LAlt => todo!(),
-        // common::Keyboard::RAlt => todo!(),
-        common::Keyboard::Shift => enigo::Key::Shift,
-        common::Keyboard::LShift => enigo::Key::LShift,
-        common::Keyboard::RShift => enigo::Key::RShift,
-        common::Keyboard::Control => enigo::Key::Control,
-        common::Keyboard::LControl => enigo::Key::LControl,
-        common::Keyboard::RControl => enigo::Key::RControl,
-        common::Keyboard::F1 => enigo::Key::F1,
-        common::Keyboard::F2 => enigo::Key::F2,
-        common::Keyboard::F3 => enigo::Key::F3,
-        common::Keyboard::F4 => enigo::Key::F4,
-        common::Keyboard::F5 => enigo::Key::F5,
-        common::Keyboard::F6 => enigo::Key::F6,
-        common::Keyboard::F7 => enigo::Key::F7,
-        common::Keyboard::F8 => enigo::Key::F8,
-        common::Keyboard::F9 => enigo::Key::F9,
-        common::Keyboard::F10 => enigo::Key::F10,
-        common::Keyboard::F11 => enigo::Key::F11,
-        common::Keyboard::F12 => enigo::Key::F12,
-        common::Keyboard::CapsLock => enigo::Key::CapsLock,
-        common::Keyboard::End => enigo::Key::End,
-        common::Keyboard::Home => enigo::Key::Home,
-        common::Keyboard::PageUp => enigo::Key::PageUp,
-        common::Keyboard::PageDown => enigo::Key::PageDown,
-        common::Keyboard::Escape => enigo::Key::Escape,
-        common::Keyboard::Return => enigo::Key::Return,
-        common::Keyboard::Space => enigo::Key::Space,
-        common::Keyboard::Tab => enigo::Key::Tab,
-        common::Keyboard::Backspace => enigo::Key::Backspace,
-        common::Keyboard::Delete => enigo::Key::Delete,
-        common::Keyboard::UpArrow => enigo::Key::UpArrow,
-        common::Keyboard::DownArrow => enigo::Key::DownArrow,
-        common::Keyboard::LeftArrow => enigo::Key::LeftArrow,
-        common::Keyboard::RightArrow => enigo::Key::RightArrow,
+        common::Key::Alt => enigo::Key::Alt,
+        common::Key::Shift => enigo::Key::Shift,
+        common::Key::Control => enigo::Key::Control,
+        common::Key::F1 => enigo::Key::F1,
+        common::Key::F2 => enigo::Key::F2,
+        common::Key::F3 => enigo::Key::F3,
+        common::Key::F4 => enigo::Key::F4,
+        common::Key::F5 => enigo::Key::F5,
+        common::Key::F6 => enigo::Key::F6,
+        common::Key::F7 => enigo::Key::F7,
+        common::Key::F8 => enigo::Key::F8,
+        common::Key::F9 => enigo::Key::F9,
+        common::Key::F10 => enigo::Key::F10,
+        common::Key::F11 => enigo::Key::F11,
+        common::Key::F12 => enigo::Key::F12,
+        common::Key::CapsLock => enigo::Key::CapsLock,
+        common::Key::End => enigo::Key::End,
+        common::Key::Home => enigo::Key::Home,
+        common::Key::PageUp => enigo::Key::PageUp,
+        common::Key::PageDown => enigo::Key::PageDown,
+        common::Key::Escape => enigo::Key::Escape,
+        common::Key::Return => enigo::Key::Return,
+        common::Key::Space => enigo::Key::Space,
+        common::Key::Tab => enigo::Key::Tab,
+        common::Key::Backspace => enigo::Key::Backspace,
+        common::Key::Delete => enigo::Key::Delete,
+        common::Key::UpArrow => enigo::Key::UpArrow,
+        common::Key::DownArrow => enigo::Key::DownArrow,
+        common::Key::LeftArrow => enigo::Key::LeftArrow,
+        common::Key::RightArrow => enigo::Key::RightArrow,
     }
 }
 
@@ -153,8 +147,8 @@ impl Simulate<SetTo<enigo::Key, bool>> for Enigo {
     }
 }
 
-impl Simulate<SetTo<common::Keyboard, bool>> for Enigo {
-    fn simulate(&mut self, simulatable: SetTo<common::Keyboard, bool>) {
+impl Simulate<SetTo<common::Key, bool>> for Enigo {
+    fn simulate(&mut self, simulatable: SetTo<common::Key, bool>) {
         let SetTo {
             input: keyboard,
             to: is_down,

@@ -3,18 +3,18 @@
 //! This is currently pretty much incomplete.
 //! Prefer `enigo` and their `Key` and `MouseButton` for most cases.
 
-use crate::{combinator::*, simulatable::*};
+use crate::{combinator::*, input_event::*};
 use std::fmt;
 
 #[rustfmt::skip]
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum Keyboard {
+pub enum Key {
     /// alt key on Linux and Windows (option key on macOS)
     // Alt, LAlt, RAlt,
     Alt,
-    Shift, LShift, RShift,
-    Control, LControl, RControl,
+    Shift,
+    Control,
 
     F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
 
@@ -29,7 +29,7 @@ pub enum Keyboard {
     UpArrow, DownArrow, LeftArrow, RightArrow,
 }
 
-impl Keyboard {
+impl Key {
     /// Set this key
     /// This is a convenience shorthand for
     /// ```
@@ -65,12 +65,12 @@ impl Keyboard {
     ///     SetTo { input: self, to: false }
     /// )
     /// ```
-    pub fn click(self) -> AndThen<SetTo<Self, bool>, SetTo<Self, bool>> {
+    pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
         self.down().then(self.up())
     }
 }
 
-impl fmt::Display for Keyboard {
+impl fmt::Display for Key {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{self:?}")
     }
@@ -178,7 +178,7 @@ impl MouseButton {
     ///     SetTo { input: self, to: false }
     /// )
     /// ```
-    pub fn click(self) -> AndThen<SetTo<Self, bool>, SetTo<Self, bool>> {
+    pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
         self.down().then(self.up())
     }
 }

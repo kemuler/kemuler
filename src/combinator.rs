@@ -3,65 +3,61 @@
 use core::fmt;
 use std::{thread, time::Duration};
 
-use crate::simulatable::Simulatable;
+use crate::{input_event::Invert, simulatable::Simulatable};
 
 /// Helper combinator trait.
 pub trait Combine: Sized {
     /// Simulate `self` and then `next`
-    fn then<S>(self, next: S) -> AndThen<Self, S> {
-        AndThen(self, next)
+    fn then<S>(self, next: S) -> Sequence<(Self, S)> {
+        Sequence((self, next))
     }
 
-    /// Simulate `self` and then sleep for amount of time
-    fn sleep(self, duration: Duration) -> AndThen<Self, Sleep> {
+    /// Simulate `self` and then sleep for duration
+    fn sleep(self, duration: Duration) -> Sequence<(Self, Sleep)> {
         self.then(Sleep(duration))
     }
 
-    /// Simulate `self` and then sleep for amount of time in milliseconds
-    fn sleep_ms(self, duration: u64) -> AndThen<Self, Sleep> {
+    /// Simulate `self` and then sleep for duration in milliseconds
+    fn sleep_ms(self, duration: u64) -> Sequence<(Self, Sleep)> {
         self.sleep(Duration::from_millis(duration))
     }
 
     /// Repeat simulation for amount of times
     fn repeat(self, times: usize) -> Repeat<Self> {
-        Repeat(self, times)
+        Repeat {
+            times,
+            simulate: self,
+        }
     }
 
     /// Iterate through an iterator and simulate each item
-    fn into_simulatable_iter(self) -> IntoSimulatableIter<Self>
+    /// Self must be an iterator and its item must be `Simulatable`.
+    fn iter_seq(self) -> IterSequence<Self>
     where
-        Self: Iterator,
+        Self: IntoIterator,
     {
-        IntoSimulatableIter(self)
+        IterSequence { iter: self }
+    }
+
+    /// Simulate through a tuple starting from `.0`.
+    /// Self must be a tuple with 0 <= size <= 32.
+    /// Nest them if you ever need more.
+    fn seq(self) -> Sequence<Self> {
+        Sequence(self)
+    }
+
+    /// Simulate self during an event.
+    /// After self is simulated, the *during* event is inverted
+    /// and simulated at the end.
+    fn during<DS>(self, during: DS) -> During<DS, Self> {
+        During {
+            during,
+            simulate: self,
+        }
     }
 }
 
 impl<S> Combine for S {}
-
-/// Simulate 2 input consecutively.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct AndThen<SA, SB>(pub SA, pub SB);
-
-impl<SA, SB, Smlt> Simulatable<Smlt> for AndThen<SA, SB>
-where
-    SA: Simulatable<Smlt>,
-    SB: Simulatable<Smlt>,
-{
-    fn run_with(self, simulator: &mut Smlt) {
-        self.0.run_with(simulator);
-        self.1.run_with(simulator);
-    }
-}
-
-impl<SA, SB> fmt::Display for AndThen<SA, SB>
-where
-    SA: fmt::Display,
-    SB: fmt::Display,
-{
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{};{}", self.0, self.1)
-    }
-}
 
 /// Thread sleep for amount of time.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -81,21 +77,24 @@ impl<Smlt> Simulatable<Smlt> for Sleep {
 
 impl fmt::Display for Sleep {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "sleep {} ms;", self.0.as_millis())
+        write!(f, "[sleep {} ms]", self.0.as_millis())
     }
 }
 
 /// Simulate an input for amount of times
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Repeat<S>(pub S, pub usize);
+pub struct Repeat<S> {
+    pub simulate: S,
+    pub times: usize,
+}
 
 impl<S, Smlt> Simulatable<Smlt> for Repeat<S>
 where
     S: Simulatable<Smlt> + Clone,
 {
     fn run_with(self, simulator: &mut Smlt) {
-        for _ in 0..self.1 {
-            self.0.clone().run_with(simulator)
+        for _ in 0..self.times {
+            self.simulate.clone().run_with(simulator)
         }
     }
 }
@@ -105,9 +104,15 @@ where
     S: fmt::Display,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{} {} times;", self.0, self.1)
+        write!(f, "[for {} times do ({})]", self.times, self.simulate)
     }
 }
+
+/// Simulate through a tuple starting from `.0`.
+/// Supported size: 0 <= size <= 32
+/// Nest them if you ever need more.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Sequence<T>(T);
 
 macro_rules! tuple_impl {
     ($($n:tt => $g:ident,)*) => {
@@ -121,20 +126,36 @@ macro_rules! tuple_impl {
         tuple_impl!{@cut_one $($n => $g,)*}
     };
     (@impl $($n:tt => $g:ident,)*) => {
-        impl<Smlt, $($g,)*> Simulatable<Smlt> for ($($g,)*)
+        impl<Smlt, $($g,)*> Simulatable<Smlt> for Sequence<($($g,)*)>
         where
             $(
                 $g: Simulatable<Smlt>,
             )*
         {
             fn run_with(self, simulator: &mut Smlt) {
+                let inner= self.0;
                 $(
-                    tuple_impl!(@nth $n, self).run_with(simulator);
+                    tuple_impl!(@nth inner, $n).run_with(simulator);
                 )*
             }
         }
+
+        impl<$($g,)*> fmt::Display for Sequence<($($g,)*)>
+        where
+            $(
+                $g: fmt::Display,
+            )*
+        {
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                let inner = &self.0;
+                $(
+                    write!(f, "{}", tuple_impl!(@nth inner, $n))?;
+                )*
+                Ok(())
+            }
+        }
     };
-    (@nth $n:tt, $x:ident) => {
+    (@nth $x:ident, $n:tt) => {
         ($x.$n)
     };
     () => {}
@@ -153,25 +174,57 @@ tuple_impl! {
 }
 
 /// Automatically do a for loop on an iterator and simulate for you!
-pub struct IntoSimulatableIter<I>(I);
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct IterSequence<I> {
+    iter: I,
+}
 
-impl<I, Smlt> Simulatable<Smlt> for IntoSimulatableIter<I>
+impl<I, Smlt> Simulatable<Smlt> for IterSequence<I>
 where
     I: IntoIterator,
     <I as IntoIterator>::Item: Simulatable<Smlt>,
 {
     fn run_with(self, simulator: &mut Smlt) {
-        for s in self.0 {
+        for s in self.iter {
             s.run_with(simulator);
         }
     }
 }
 
-impl<S> fmt::Display for IntoSimulatableIter<S>
+impl<S> fmt::Display for IterSequence<S>
 where
     S: fmt::Display,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "iterate {};", self.0)
+        write!(f, "[iterate ({})]", self.iter)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct During<DS, S> {
+    during: DS,
+    simulate: S,
+}
+
+impl<WS, S, Smlt> Simulatable<Smlt> for During<WS, S>
+where
+    S: Simulatable<Smlt>,
+    WS: Invert + Simulatable<Smlt> + Clone,
+    <WS as Invert>::Output: Simulatable<Smlt>,
+{
+    fn run_with(self, simulator: &mut Smlt) {
+        self.during.clone().run_with(simulator);
+        self.simulate.run_with(simulator);
+        self.during.invert().run_with(simulator);
+    }
+}
+
+impl<DS, S> fmt::Display for During<DS, S>
+where
+    DS: fmt::Display,
+    S: fmt::Display,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "[during ({}), do ({})]", self.during, self.simulate)
     }
 }
