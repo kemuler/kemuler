@@ -14,7 +14,14 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// Set the key.
     /// This is a convenience shorthand for
     /// ```
-    /// SetTo { input: self, to: to }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # use kemuler::simulators::enigo::EnigoKeyExt;
+    /// # let this = enigo::Key::Alt;
+    /// # let to = true;
+    /// # let output =
+    /// SetTo { input: this, to: to }
+    /// # ;
+    /// # assert_eq!(this.set_to(to), output);
     /// ```
     fn set_to(self, to: bool) -> SetTo<Self, bool> {
         SetTo { input: self, to }
@@ -23,7 +30,13 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// Press the key.
     /// This is a convenience shorthand for
     /// ```
-    /// SetTo { input: self, to: true }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # use kemuler::simulators::enigo::EnigoKeyExt;
+    /// # let this = enigo::Key::Alt;
+    /// # let output =
+    /// SetTo { input: this, to: true }
+    /// # ;
+    /// # assert_eq!(this.down(), output);
     /// ```
     fn down(self) -> SetTo<Self, bool> {
         self.set_to(true)
@@ -33,7 +46,13 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// Release the key
     /// This is a convenience shorthand for
     /// ```
-    /// SetTo { input: self, to: false }
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # use kemuler::simulators::enigo::EnigoKeyExt;
+    /// # let this = enigo::Key::Alt;
+    /// # let output =
+    /// SetTo { input: this, to: false }
+    /// # ;
+    /// # assert_eq!(this.up(), output);
     /// ```
     fn up(self) -> SetTo<Self, bool> {
         self.set_to(false)
@@ -42,10 +61,16 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// Press and release the key.
     /// This is a convenience shorthand for
     /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # use kemuler::simulators::enigo::EnigoKeyExt;
+    /// # let this = enigo::Key::Alt;
+    /// # let output =
     /// (
-    ///     SetTo { input: self, to: true },
-    ///     SetTo { input: self, to: false }
+    ///     SetTo { input: this, to: true },
+    ///     SetTo { input: this, to: false }
     /// ).seq()
+    /// # ;
+    /// # assert_eq!(this.click(), output);
     /// ```
     fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
         self.clone().down().then(self.up())
