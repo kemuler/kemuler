@@ -14,8 +14,11 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// Set the key.
     /// This is a convenience shorthand for
     /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # use kemuler::simulators::enigo::EnigoKeyExt;
+    /// # use kemuler::{
+    /// #     prelude::*,
+    /// #     input_event::*
+    /// #     simulators::enigo::EnigoKeyExt
+    /// # };
     /// # let this = enigo::Key::Alt;
     /// # let to = true;
     /// # let output =
@@ -30,8 +33,11 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// Press the key.
     /// This is a convenience shorthand for
     /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # use kemuler::simulators::enigo::EnigoKeyExt;
+    /// # use kemuler::{
+    /// #     prelude::*,
+    /// #     input_event::*
+    /// #     simulators::enigo::EnigoKeyExt
+    /// # };
     /// # let this = enigo::Key::Alt;
     /// # let output =
     /// SetTo { input: this, to: true }
@@ -46,8 +52,11 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// Release the key
     /// This is a convenience shorthand for
     /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # use kemuler::simulators::enigo::EnigoKeyExt;
+    /// # use kemuler::{
+    /// #     prelude::*,
+    /// #     input_event::*
+    /// #     simulators::enigo::EnigoKeyExt
+    /// # };
     /// # let this = enigo::Key::Alt;
     /// # let output =
     /// SetTo { input: this, to: false }
@@ -61,8 +70,11 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// Press and release the key.
     /// This is a convenience shorthand for
     /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # use kemuler::simulators::enigo::EnigoKeyExt;
+    /// # use kemuler::{
+    /// #     prelude::*,
+    /// #     input_event::*
+    /// #     simulators::enigo::EnigoKeyExt
+    /// # };
     /// # let this = enigo::Key::Alt;
     /// # let output =
     /// (
