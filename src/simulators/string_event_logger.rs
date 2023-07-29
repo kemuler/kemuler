@@ -5,11 +5,17 @@ use crate::{common_inputs, input_event::*, simulator::Simulate};
 #[macro_export]
 macro_rules! assert_event {
     ($logger:ident, $idx:expr, $event:expr) => {
-        ::std::assert_eq!($logger.data[$idx], ::std::format!("{:?}", $event));
+        ::std::assert_eq!(
+            $logger.data[$idx],
+            ::std::format!("{:?}", $event),
+            "Assert actual event (left) equals expected event (right) at index {}",
+            $idx
+        );
     };
 }
 
-/// Mocked simulator to be used with testing.
+/// Mock simulator to be used with testing.
+/// This uses `Debug` formmating as a log information.
 ///
 /// Implemented simulatables:
 /// - `SetTo   <enigo::Key                  , bool>`

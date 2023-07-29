@@ -3,5 +3,5 @@
 #[cfg(feature = "enigo")]
 pub mod enigo;
 
-#[cfg(feature = "string-event-logger")]
+#[cfg(any(feature = "string-event-logger", test))]
 pub mod string_event_logger;
