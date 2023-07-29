@@ -17,31 +17,17 @@ let mut s = SomeSimulator::new();
 (
     Key::Shift.down(),
 
-    Key::O.click() // a click is key down then key up,
-    Key::H.down(),
-    Key::H.up() // these are the same as Key::H.click(),
+    Key::O.click();
+    Key::H.click();
 
-    Sleep::from_ms(25), // sleep 25 milliseconds
-
-    (
-        Key::Y.click(),
-    ),
-    Key::E.click(),
-    {
-      println!("hello there.");
-      // statement returns ()
-      // and that does nothing but supported.
-      // you can debug or something like this.
-    },
+    Key::Y.click();
+    Key::E.click();
     Key::A.click();
     Key::H.click().repeat(5) // repeat anything before the `.repeat` 5 times,
 
     Key::Shift.up(),
 ).run_with(&mut s)
 // this typed the message: "OH YEAHHHHH"
-
-// Note that `.up()`, `.down()`, and `.click()` is implemented on `Key` it self,
-// not from a trait. They return something that the `Combine` trait can work with.
 ````
 
 Currently, there are only a few amount of combinators present.
@@ -49,6 +35,7 @@ If you've got some more useful combinator, please submit an issue on [GitHub][ke
 
 # Simulators
 Simulators that are being maintained by this crate.
+(a simulator is just a backend)
 
 ## Enigo
 **Cross-platform input simulator.**
