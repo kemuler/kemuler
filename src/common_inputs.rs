@@ -36,8 +36,10 @@ impl Key {
     /// # use kemuler::{prelude::*, input_event::*};
     /// # let this = Key::Alt;
     /// # let to = true;
+    /// # let output =
     /// SetTo { input: this, to: to }
     /// # ;
+    /// # assert_eq!(this.set_to(to), output);
     /// ```
     pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
         SetTo { input: self, to }
@@ -48,8 +50,10 @@ impl Key {
     /// ```
     /// # use kemuler::{prelude::*, input_event::*};
     /// # let this = Key::Alt;
+    /// # let output =
     /// SetTo { input: this, to: true }
     /// # ;
+    /// # assert_eq!(this.down(), output);
     /// ```
     pub fn down(self) -> SetTo<Self, bool> {
         self.set_to(true)
@@ -60,8 +64,10 @@ impl Key {
     /// ```
     /// # use kemuler::{prelude::*, input_event::*};
     /// # let this = Key::Alt;
+    /// # let output =
     /// SetTo { input: this, to: false }
     /// # ;
+    /// # assert_eq!(this.up(), output);
     /// ```
     pub fn up(self) -> SetTo<Self, bool> {
         self.set_to(false)
@@ -72,11 +78,13 @@ impl Key {
     /// ```
     /// # use kemuler::{prelude::*, input_event::*};
     /// # let this = Key::Alt;
+    /// # let output =
     /// (
     ///     SetTo { input: this, to: true },
     ///     SetTo { input: this, to: false }
     /// ).seq()
     /// # ;
+    /// # assert_eq!(this.click(), output);
     /// ```
     pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
         self.down().then(self.up())
@@ -100,8 +108,10 @@ impl MousePosition {
     /// # let this = MousePosition;
     /// # let x = 10i32;
     /// # let y = 10i32;
+    /// # let output =
     /// SetTo { input: this, to: (x, y) }
     /// # ;
+    /// # assert_eq!(this.move_to(x, y), output);
     /// ```
     pub fn move_to(self, x: i32, y: i32) -> SetTo<Self, (i32, i32)> {
         SetTo {
@@ -117,8 +127,10 @@ impl MousePosition {
     /// # let this = MousePosition;
     /// # let x = 10i32;
     /// # let y = 10i32;
+    /// # let output =
     /// ChangeBy { input: this, by: (x, y) }
     /// # ;
+    /// # assert_eq!(this.move_by(x, y), output);
     /// ```
     pub fn move_by(self, x: i32, y: i32) -> ChangeBy<Self, (i32, i32)> {
         ChangeBy {
@@ -145,8 +157,10 @@ impl MouseScroll {
     /// # let this = MouseScroll;
     /// # let x = 10i32;
     /// # let y = 10i32;
+    /// # let output =
     /// ChangeBy { input: this, by: (x, y) }
     /// # ;
+    /// # assert_eq!(this.scroll_by(x, y), output);
     /// ```
     pub fn scroll_by(self, x: i32, y: i32) -> ChangeBy<Self, (i32, i32)> {
         ChangeBy {
@@ -177,8 +191,10 @@ impl MouseButton {
     /// # use kemuler::{prelude::*, input_event::*};
     /// # let this = MouseButton::Left;
     /// # let to = true;
+    /// # let output =
     /// SetTo { input: this, to: to }
     /// # ;
+    /// # assert_eq!(this.set_to(to), output);
     /// ```
     pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
         SetTo { input: self, to }
@@ -187,9 +203,12 @@ impl MouseButton {
     /// Press the button.
     /// This is a convenience shorthand for
     /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
     /// # let this = MouseButton::Left;
+    /// # let output =
     /// SetTo { input: this, to: true }
     /// # ;
+    /// # assert_eq!(this.down(), output);
     /// ```
     pub fn down(self) -> SetTo<Self, bool> {
         self.set_to(true)
@@ -200,8 +219,10 @@ impl MouseButton {
     /// ```
     /// # use kemuler::{prelude::*, input_event::*};
     /// # let this = MouseButton::Left;
+    /// # let output =
     /// SetTo { input: this, to: false }
     /// # ;
+    /// # assert_eq!(this.up(), output);
     /// ```
     pub fn up(self) -> SetTo<Self, bool> {
         self.set_to(false)
@@ -212,11 +233,13 @@ impl MouseButton {
     /// ```
     /// # use kemuler::{prelude::*, input_event::*};
     /// # let this = MouseButton::Left;
+    /// # let output =
     /// (
     ///     SetTo { input: this, to: true },
     ///     SetTo { input: this, to: false }
     /// ).seq()
     /// # ;
+    /// # assert_eq!(this.click(), output);
     /// ```
     pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
         self.down().then(self.up())
