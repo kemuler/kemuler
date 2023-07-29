@@ -1,8 +1,9 @@
+//! Simulator that doesn't simulate anything but logs the inputs.
+
 use std::fmt;
 
 use crate::{common_inputs, input_event::*, simulator::Simulate};
 
-#[macro_export]
 macro_rules! assert_event {
     ($logger:ident, $idx:expr, $event:expr) => {
         ::std::assert_eq!(
@@ -14,8 +15,12 @@ macro_rules! assert_event {
     };
 }
 
-/// Mock simulator to be used with testing.
-/// This uses `Debug` formmating as a log information.
+pub(crate) use assert_event;
+
+/// A simulator that doesn't simulate anything,
+/// it, instead, collect what input has been given.
+/// This is currently used as a mock simulator for testing
+/// and not intended for public use, yet.
 ///
 /// Implemented simulatables:
 /// - `SetTo   <enigo::Key                  , bool>`
