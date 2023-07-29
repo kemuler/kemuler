@@ -16,7 +16,7 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// ```
     /// # use kemuler::{
     /// #     prelude::*,
-    /// #     input_event::*
+    /// #     input_event::*,
     /// #     simulators::enigo::EnigoKeyExt
     /// # };
     /// # let this = enigo::Key::Alt;
@@ -35,7 +35,7 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// ```
     /// # use kemuler::{
     /// #     prelude::*,
-    /// #     input_event::*
+    /// #     input_event::*,
     /// #     simulators::enigo::EnigoKeyExt
     /// # };
     /// # let this = enigo::Key::Alt;
@@ -54,7 +54,7 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// ```
     /// # use kemuler::{
     /// #     prelude::*,
-    /// #     input_event::*
+    /// #     input_event::*,
     /// #     simulators::enigo::EnigoKeyExt
     /// # };
     /// # let this = enigo::Key::Alt;
@@ -72,7 +72,7 @@ pub trait EnigoKeyExt: Sized + Clone {
     /// ```
     /// # use kemuler::{
     /// #     prelude::*,
-    /// #     input_event::*
+    /// #     input_event::*,
     /// #     simulators::enigo::EnigoKeyExt
     /// # };
     /// # let this = enigo::Key::Alt;
