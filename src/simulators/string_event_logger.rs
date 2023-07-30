@@ -4,6 +4,7 @@ use std::fmt;
 
 use crate::{common_inputs, input_event::*, simulator::Simulate};
 
+#[macro_export]
 macro_rules! assert_event {
     ($logger:ident, $idx:expr, $event:expr) => {
         ::std::assert_eq!(
@@ -14,8 +15,6 @@ macro_rules! assert_event {
         );
     };
 }
-
-pub(crate) use assert_event;
 
 /// A simulator that doesn't simulate anything,
 /// it, instead, collect what input has been given.
