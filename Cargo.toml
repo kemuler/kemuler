@@ -32,9 +32,6 @@ enigo = ["dep:enigo"]
 # (it is not counted as a breaking change when removed)
 test = []
 
-# Use StringEventLogger as simulator
-string-event-logger = []
-
 [[example]]
 name = "auto-clicker"
 required-features = ["enigo"]
