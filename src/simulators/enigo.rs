@@ -135,8 +135,8 @@ fn enigoify_common_mouse_button(button: common_inputs::MouseButton) -> enigo::Mo
     }
 }
 
-fn enigoify_common_keyboard(keyboard: common_inputs::Key) -> enigo::Key {
-    match keyboard {
+fn enigoify_common_key(key: common_inputs::Key) -> enigo::Key {
+    match key {
         common_inputs::Key::Alt => enigo::Key::Alt,
         common_inputs::Key::Shift => enigo::Key::Shift,
         common_inputs::Key::Control => enigo::Key::Control,
@@ -187,14 +187,28 @@ impl Simulate<SetTo<enigo::Key, bool>> for Enigo {
 impl Simulate<SetTo<common_inputs::Key, bool>> for Enigo {
     fn simulate(&mut self, simulatable: SetTo<common_inputs::Key, bool>) {
         let SetTo {
-            input: keyboard,
+            input: key,
             to: is_down,
         } = simulatable;
-        let key = enigoify_common_keyboard(keyboard);
+        let key = enigoify_common_key(key);
         if is_down {
             self.0.key_down(key)
         } else {
             self.0.key_up(key)
+        }
+    }
+}
+
+impl Simulate<SetTo<common_inputs::Char, bool>> for Enigo {
+    fn simulate(&mut self, simulatable: SetTo<common_inputs::Char, bool>) {
+        let SetTo {
+            input: char_key,
+            to: is_down,
+        } = simulatable;
+        if is_down {
+            self.0.key_down(enigo::Key::Layout(char_key.0))
+        } else {
+            self.0.key_up(enigo::Key::Layout(char_key.0))
         }
     }
 }
