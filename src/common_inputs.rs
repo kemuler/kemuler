@@ -30,7 +30,7 @@ pub enum Key {
 }
 
 impl Key {
-    /// Set this key
+    /// Set this key state
     /// This is a convenience shorthand for
     /// ```
     /// # use kemuler::{prelude::*, input_event::*};
@@ -94,6 +94,71 @@ impl Key {
 impl fmt::Display for Key {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{self:?}")
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Char(char);
+
+impl Char {
+    /// Set this character key state
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Key::Alt;
+    /// # let to = true;
+    /// # let output =
+    /// SetTo { input: this, to: to }
+    /// # ;
+    /// # assert_eq!(this.set_to(to), output);
+    /// ```
+    pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
+        SetTo { input: self, to }
+    }
+
+    /// Press the character key.
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Key::Alt;
+    /// # let output =
+    /// SetTo { input: this, to: true }
+    /// # ;
+    /// # assert_eq!(this.down(), output);
+    /// ```
+    pub fn down(self) -> SetTo<Self, bool> {
+        self.set_to(true)
+    }
+
+    /// Release the character key
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Key::Alt;
+    /// # let output =
+    /// SetTo { input: this, to: false }
+    /// # ;
+    /// # assert_eq!(this.up(), output);
+    /// ```
+    pub fn up(self) -> SetTo<Self, bool> {
+        self.set_to(false)
+    }
+
+    /// Press and release the character key.
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Key::Alt;
+    /// # let output =
+    /// (
+    ///     SetTo { input: this, to: true },
+    ///     SetTo { input: this, to: false }
+    /// ).seq()
+    /// # ;
+    /// # assert_eq!(this.click(), output);
+    /// ```
+    pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
+        self.down().then(self.up())
     }
 }
 
