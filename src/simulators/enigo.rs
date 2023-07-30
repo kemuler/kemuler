@@ -158,7 +158,7 @@ fn enigoify_common_key(key: common_inputs::Key) -> enigo::Key {
         common_inputs::Key::PageUp => enigo::Key::PageUp,
         common_inputs::Key::PageDown => enigo::Key::PageDown,
         common_inputs::Key::Escape => enigo::Key::Escape,
-        common_inputs::Key::Return => enigo::Key::Return,
+        common_inputs::Key::Enter => enigo::Key::Return,
         common_inputs::Key::Space => enigo::Key::Space,
         common_inputs::Key::Tab => enigo::Key::Tab,
         common_inputs::Key::Backspace => enigo::Key::Backspace,

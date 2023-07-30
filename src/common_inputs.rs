@@ -22,7 +22,7 @@ pub enum Key {
 
     End, Home, PageUp, PageDown,
 
-    Escape, Return, Space, Tab,
+    Escape, Enter, Space, Tab,
 
     Backspace, Delete,
 
