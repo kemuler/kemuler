@@ -63,6 +63,7 @@ impl_logger! {
     #[cfg(feature = "enigo")] SetTo<enigo::MouseButton, bool>
     SetTo<common_inputs::Key, bool>
     SetTo<common_inputs::MouseButton, bool>
+    SetTo<common_inputs::Char, bool>
     SetTo<common_inputs::MousePosition, (i32, i32)>
     ChangeBy<common_inputs::MousePosition, (i32, i32)>
     ChangeBy<common_inputs::MouseScroll, (i32, i32)>
