@@ -43,6 +43,10 @@ impl StringEventLogger {
     pub fn push<T: fmt::Debug>(&mut self, t: &T) {
         self.data.push(format!("{:?}", t));
     }
+
+    pub fn clear(&mut self) {
+        self.data.clear()
+    }
 }
 
 macro_rules! impl_logger {
