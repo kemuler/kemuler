@@ -98,7 +98,7 @@ impl fmt::Display for Key {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Char(char);
+pub struct Char(pub char);
 
 impl Char {
     /// Set this character key state
