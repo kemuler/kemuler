@@ -1,3 +1,4 @@
+#![doc = include_str!("../README.md")]
 //! # Examples
 //! All exmaples are using a private simulator for demonstration purposes.
 //! `assert_event` is not available in public API.
