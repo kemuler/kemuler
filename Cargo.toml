@@ -41,4 +41,4 @@ name = "mouse-circle"
 required-features = ["enigo"]
 
 [package.metadata.docs.rs]
-all-features = true
+features = ["enigo"]
