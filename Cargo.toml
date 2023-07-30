@@ -27,6 +27,11 @@ default = ["enigo"]
 # Use Enigo as simulator
 enigo = ["dep:enigo"]
 
+# this feature is currently a work around for https://github.com/rust-lang/rust/issues/67295
+# uh do not use btw if you're not testing this crate's doctest.
+# (it is not counted as a breaking change when removed)
+test = []
+
 # Use StringEventLogger as simulator
 string-event-logger = []
 

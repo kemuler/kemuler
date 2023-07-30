@@ -1,7 +1,7 @@
 use std::time::{Duration, Instant};
 
 use crate::prelude::*;
-use crate::simulators::string_event_logger::{assert_event, StringEventLogger as S};
+use crate::{assert_event, simulators::string_event_logger::StringEventLogger as S};
 
 use super::Sleep;
 

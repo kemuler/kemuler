@@ -105,7 +105,7 @@ impl Char {
     /// This is a convenience shorthand for
     /// ```
     /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Key::Alt;
+    /// # let this = Char('a');
     /// # let to = true;
     /// # let output =
     /// SetTo { input: this, to: to }
@@ -120,7 +120,7 @@ impl Char {
     /// This is a convenience shorthand for
     /// ```
     /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Key::Alt;
+    /// # let this = Char('a');
     /// # let output =
     /// SetTo { input: this, to: true }
     /// # ;
@@ -134,7 +134,7 @@ impl Char {
     /// This is a convenience shorthand for
     /// ```
     /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Key::Alt;
+    /// # let this = Char('a');
     /// # let output =
     /// SetTo { input: this, to: false }
     /// # ;
@@ -148,7 +148,7 @@ impl Char {
     /// This is a convenience shorthand for
     /// ```
     /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Key::Alt;
+    /// # let this = Char('a');
     /// # let output =
     /// (
     ///     SetTo { input: this, to: true },
