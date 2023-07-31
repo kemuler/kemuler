@@ -78,3 +78,26 @@ where
         write!(f, "[change {} by {}]", self.input, self.by)
     }
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Execute<I> {
+    pub input: I,
+}
+
+impl<I, Smlt> Simulatable<Smlt> for Execute<I>
+where
+    Smlt: Simulate<Self>,
+{
+    fn run_with(self, simulator: &mut Smlt) {
+        simulator.simulate(self)
+    }
+}
+
+impl<I> fmt::Display for Execute<I>
+where
+    I: fmt::Display,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "[execute {}]", self.input)
+    }
+}

@@ -96,71 +96,6 @@ impl fmt::Display for Key {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Char(pub char);
-
-impl Char {
-    /// Set this character key state
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Char('a');
-    /// # let to = true;
-    /// # let output =
-    /// SetTo { input: this, to: to }
-    /// # ;
-    /// # assert_eq!(this.set_to(to), output);
-    /// ```
-    pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
-        SetTo { input: self, to }
-    }
-
-    /// Press the character key.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Char('a');
-    /// # let output =
-    /// SetTo { input: this, to: true }
-    /// # ;
-    /// # assert_eq!(this.down(), output);
-    /// ```
-    pub fn down(self) -> SetTo<Self, bool> {
-        self.set_to(true)
-    }
-
-    /// Release the character key
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Char('a');
-    /// # let output =
-    /// SetTo { input: this, to: false }
-    /// # ;
-    /// # assert_eq!(this.up(), output);
-    /// ```
-    pub fn up(self) -> SetTo<Self, bool> {
-        self.set_to(false)
-    }
-
-    /// Press and release the character key.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Char('a');
-    /// # let output =
-    /// (
-    ///     SetTo { input: this, to: true },
-    ///     SetTo { input: this, to: false }
-    /// ).seq()
-    /// # ;
-    /// # assert_eq!(this.click(), output);
-    /// ```
-    pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
-        self.down().then(self.up())
-    }
-}
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct MousePosition;
 
@@ -313,5 +248,88 @@ impl MouseButton {
 impl fmt::Display for MouseButton {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{self:?}")
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Char(pub char);
+
+impl Char {
+    /// Set this character key state
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Char('a');
+    /// # let to = true;
+    /// # let output =
+    /// SetTo { input: this, to: to }
+    /// # ;
+    /// # assert_eq!(this.set_to(to), output);
+    /// ```
+    pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
+        SetTo { input: self, to }
+    }
+
+    /// Press the character key.
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Char('a');
+    /// # let output =
+    /// SetTo { input: this, to: true }
+    /// # ;
+    /// # assert_eq!(this.down(), output);
+    /// ```
+    pub fn down(self) -> SetTo<Self, bool> {
+        self.set_to(true)
+    }
+
+    /// Release the character key
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Char('a');
+    /// # let output =
+    /// SetTo { input: this, to: false }
+    /// # ;
+    /// # assert_eq!(this.up(), output);
+    /// ```
+    pub fn up(self) -> SetTo<Self, bool> {
+        self.set_to(false)
+    }
+
+    /// Press and release the character key.
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = Char('a');
+    /// # let output =
+    /// (
+    ///     SetTo { input: this, to: true },
+    ///     SetTo { input: this, to: false }
+    /// ).seq()
+    /// # ;
+    /// # assert_eq!(this.click(), output);
+    /// ```
+    pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
+        self.down().then(self.up())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct StrSequence<'a>(pub &'a str);
+
+/// This is a convenience shorthand for
+/// ```
+/// # use kemuler::{prelude::*, input_event::*};
+/// # let this = StrSequence("abcdefg");
+/// # let output =
+/// Execute { input: this }
+/// # ;
+/// # assert_eq!(this.execute(), output);
+/// ```
+impl<'a> StrSequence<'a> {
+    pub fn execute(self) -> Execute<Self> {
+        Execute { input: self }
     }
 }

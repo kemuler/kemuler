@@ -264,3 +264,10 @@ impl Simulate<ChangeBy<common_inputs::MouseScroll, (i32, i32)>> for Enigo {
         }
     }
 }
+
+impl<'a> Simulate<Execute<common_inputs::StrSequence<'a>>> for Enigo {
+    fn simulate(&mut self, simulatable: Execute<common_inputs::StrSequence>) {
+        let Execute { input } = simulatable;
+        self.0.key_sequence(input.0)
+    }
+}
