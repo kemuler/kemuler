@@ -46,6 +46,8 @@ let mut s = Simulator::new();
 Currently, there are only a few amount of combinators present.
 If you've got some more useful combinator, please submit an issue on [GitHub][kemuler_repo]!
 
+See crate's document for more examples.
+
 # Simulators
 Simulators that are being maintained by this crate.
 (a simulator is just a backend)
