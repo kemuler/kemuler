@@ -41,6 +41,11 @@ fn combinator_sleep() {
 }
 
 #[test]
+fn combinator_spin_sleep() {
+    todo!()
+}
+
+#[test]
 fn combinator_repeat() {
     let mut s = S::new();
     let x = Key::Home.down().repeat(5);

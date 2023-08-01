@@ -84,6 +84,25 @@ impl fmt::Display for Sleep {
     }
 }
 
+/// Accurate thread sleep for amount of time using [`spin_sleep`](https://crates.io/crates/spin_sleep).
+#[cfg(feature = "spin_sleep")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct SpinSleep(pub Duration);
+
+#[cfg(feature = "spin_sleep")]
+impl<Smlt> Simulatable<Smlt> for SpinSleep {
+    fn run_with(self, _: &mut Smlt) {
+        spin_sleep::sleep(self.0);
+    }
+}
+
+#[cfg(feature = "spin_sleep")]
+impl fmt::Display for SpinSleep {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "[spin sleep {} ms]", self.0.as_millis())
+    }
+}
+
 /// Simulate an input for amount of times
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Repeat<S> {
