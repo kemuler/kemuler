@@ -116,20 +116,6 @@ impl Simulate<SetTo<common_inputs::Key, bool>> for Enigo {
     }
 }
 
-impl Simulate<SetTo<common_inputs::Char, bool>> for Enigo {
-    fn simulate(&mut self, simulatable: SetTo<common_inputs::Char, bool>) {
-        let SetTo {
-            input: char_key,
-            to: is_down,
-        } = simulatable;
-        if is_down {
-            self.0.key_down(enigo::Key::Layout(char_key.0))
-        } else {
-            self.0.key_up(enigo::Key::Layout(char_key.0))
-        }
-    }
-}
-
 impl Simulate<SetTo<enigo::MouseButton, bool>> for Enigo {
     fn simulate(&mut self, simulatable: SetTo<enigo::MouseButton, bool>) {
         let SetTo {
@@ -179,12 +165,5 @@ impl Simulate<ChangeBy<common_inputs::MouseScroll, (i32, i32)>> for Enigo {
         if by.1 != 0 {
             self.0.mouse_scroll_x(by.1);
         }
-    }
-}
-
-impl<'a> Simulate<Execute<common_inputs::StrSequence<'a>>> for Enigo {
-    fn simulate(&mut self, simulatable: Execute<common_inputs::StrSequence>) {
-        let Execute { input } = simulatable;
-        self.0.key_sequence(input.0)
     }
 }
