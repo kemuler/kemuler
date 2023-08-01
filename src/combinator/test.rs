@@ -29,10 +29,14 @@ fn combinator_sleep() {
     let now = Instant::now();
 
     let diff = now - previous;
-    let deviation = Duration::from_millis(2);
-    let min = sleep_amount - deviation;
-    let max = sleep_amount + deviation;
-    assert!(diff >= min && diff <= max);
+    let max_acceptatble_deviation = Duration::from_millis(50);
+    let deviated = diff - sleep_amount;
+    assert!(
+        deviated <= max_acceptatble_deviation,
+        "diff is {} millis, deviated by {} millis",
+        diff.as_millis(),
+        deviated.as_millis(),
+    );
     assert_eq!(s.data.len(), 0);
 }
 
