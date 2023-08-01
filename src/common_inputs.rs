@@ -15,6 +15,7 @@ pub trait ButtonLike: Sized {
     /// # let this = 0i32;
     /// # let to = 0i32;
     /// SetTo { input: this, to: to }
+    /// # ;
     /// ```
     fn set_to(self, to: bool) -> SetTo<Self, bool> {
         SetTo { input: self, to }
@@ -26,6 +27,7 @@ pub trait ButtonLike: Sized {
     /// # use kemuler::input_event::*;
     /// # let this = 0i32;
     /// SetTo { input: this, to: true }
+    /// # ;
     /// ```
     fn down(self) -> SetTo<Self, bool> {
         self.set_to(true)
@@ -37,6 +39,7 @@ pub trait ButtonLike: Sized {
     /// # use kemuler::input_event::*;
     /// # let this = 0i32;
     /// SetTo { input: this, to: false }
+    /// # ;
     /// ```
     fn up(self) -> SetTo<Self, bool> {
         self.set_to(false)
@@ -51,6 +54,7 @@ pub trait ButtonLike: Sized {
     ///     SetTo { input: this, to: true },
     ///     SetTo { input: this, to: false }
     /// ).seq()
+    /// # ;
     /// ```
     fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)>
     where
