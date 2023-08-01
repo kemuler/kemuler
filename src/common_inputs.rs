@@ -6,6 +6,60 @@
 use crate::{combinator::*, input_event::*};
 use std::fmt;
 
+/// The whole thing is a convenience shorthand
+pub trait ButtonLike: Sized {
+    /// Set this button state
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::input_event::*;
+    /// # let this = 0i32;
+    /// # let to = 0i32;
+    /// SetTo { input: this, to: to }
+    /// ```
+    fn set_to(self, to: bool) -> SetTo<Self, bool> {
+        SetTo { input: self, to }
+    }
+
+    /// Press the button.
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::input_event::*;
+    /// # let this = 0i32;
+    /// SetTo { input: this, to: true }
+    /// ```
+    fn down(self) -> SetTo<Self, bool> {
+        self.set_to(true)
+    }
+
+    /// Release the key
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::input_event::*;
+    /// # let this = 0i32;
+    /// SetTo { input: this, to: false }
+    /// ```
+    fn up(self) -> SetTo<Self, bool> {
+        self.set_to(false)
+    }
+
+    /// Press and release the button consecutively.
+    /// This is a convenience shorthand for
+    /// ```
+    /// # use kemuler::{prelude::*, input_event::*};
+    /// # let this = 0i32;
+    /// (
+    ///     SetTo { input: this, to: true },
+    ///     SetTo { input: this, to: false }
+    /// ).seq()
+    /// ```
+    fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)>
+    where
+        Self: Clone,
+    {
+        self.clone().down().then(self.up())
+    }
+}
+
 #[rustfmt::skip]
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -28,67 +82,7 @@ pub enum Key {
     UpArrow, DownArrow, LeftArrow, RightArrow,
 }
 
-impl Key {
-    /// Set this key state
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Key::Alt;
-    /// # let to = true;
-    /// # let output =
-    /// SetTo { input: this, to: to }
-    /// # ;
-    /// # assert_eq!(this.set_to(to), output);
-    /// ```
-    pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
-        SetTo { input: self, to }
-    }
-
-    /// Press the key.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Key::Alt;
-    /// # let output =
-    /// SetTo { input: this, to: true }
-    /// # ;
-    /// # assert_eq!(this.down(), output);
-    /// ```
-    pub fn down(self) -> SetTo<Self, bool> {
-        self.set_to(true)
-    }
-
-    /// Release the key
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Key::Alt;
-    /// # let output =
-    /// SetTo { input: this, to: false }
-    /// # ;
-    /// # assert_eq!(this.up(), output);
-    /// ```
-    pub fn up(self) -> SetTo<Self, bool> {
-        self.set_to(false)
-    }
-
-    /// Press and release the key.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Key::Alt;
-    /// # let output =
-    /// (
-    ///     SetTo { input: this, to: true },
-    ///     SetTo { input: this, to: false }
-    /// ).seq()
-    /// # ;
-    /// # assert_eq!(this.click(), output);
-    /// ```
-    pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
-        self.down().then(self.up())
-    }
-}
+impl ButtonLike for Key {}
 
 impl fmt::Display for Key {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -183,67 +177,7 @@ pub enum MouseButton {
     Right,
 }
 
-impl MouseButton {
-    /// Set this button.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = MouseButton::Left;
-    /// # let to = true;
-    /// # let output =
-    /// SetTo { input: this, to: to }
-    /// # ;
-    /// # assert_eq!(this.set_to(to), output);
-    /// ```
-    pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
-        SetTo { input: self, to }
-    }
-
-    /// Press the button.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = MouseButton::Left;
-    /// # let output =
-    /// SetTo { input: this, to: true }
-    /// # ;
-    /// # assert_eq!(this.down(), output);
-    /// ```
-    pub fn down(self) -> SetTo<Self, bool> {
-        self.set_to(true)
-    }
-
-    /// Release the button.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = MouseButton::Left;
-    /// # let output =
-    /// SetTo { input: this, to: false }
-    /// # ;
-    /// # assert_eq!(this.up(), output);
-    /// ```
-    pub fn up(self) -> SetTo<Self, bool> {
-        self.set_to(false)
-    }
-
-    /// Press and release the button.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = MouseButton::Left;
-    /// # let output =
-    /// (
-    ///     SetTo { input: this, to: true },
-    ///     SetTo { input: this, to: false }
-    /// ).seq()
-    /// # ;
-    /// # assert_eq!(this.click(), output);
-    /// ```
-    pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
-        self.down().then(self.up())
-    }
-}
+impl ButtonLike for MouseButton {}
 
 impl fmt::Display for MouseButton {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -254,67 +188,7 @@ impl fmt::Display for MouseButton {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Char(pub char);
 
-impl Char {
-    /// Set this character key state
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Char('a');
-    /// # let to = true;
-    /// # let output =
-    /// SetTo { input: this, to: to }
-    /// # ;
-    /// # assert_eq!(this.set_to(to), output);
-    /// ```
-    pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
-        SetTo { input: self, to }
-    }
-
-    /// Press the character key.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Char('a');
-    /// # let output =
-    /// SetTo { input: this, to: true }
-    /// # ;
-    /// # assert_eq!(this.down(), output);
-    /// ```
-    pub fn down(self) -> SetTo<Self, bool> {
-        self.set_to(true)
-    }
-
-    /// Release the character key
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Char('a');
-    /// # let output =
-    /// SetTo { input: this, to: false }
-    /// # ;
-    /// # assert_eq!(this.up(), output);
-    /// ```
-    pub fn up(self) -> SetTo<Self, bool> {
-        self.set_to(false)
-    }
-
-    /// Press and release the character key.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = Char('a');
-    /// # let output =
-    /// (
-    ///     SetTo { input: this, to: true },
-    ///     SetTo { input: this, to: false }
-    /// ).seq()
-    /// # ;
-    /// # assert_eq!(this.click(), output);
-    /// ```
-    pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
-        self.down().then(self.up())
-    }
-}
+impl ButtonLike for Char {}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct StrSequence<'a>(pub &'a str);

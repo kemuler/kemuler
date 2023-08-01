@@ -1,96 +1,13 @@
 //! Simulate input using `Enigo`.
 
-use crate::{
-    combinator::{Combine, Sequence},
-    common_inputs,
-    input_event::*,
-    simulator::Simulate,
-};
+use crate::{common_inputs, input_event::*, simulator::Simulate};
+use common_inputs::ButtonLike;
 use enigo::{KeyboardControllable, MouseControllable};
 
 pub use enigo;
 
-pub trait EnigoKeyExt: Sized + Clone {
-    /// Set the key.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{
-    /// #     prelude::*,
-    /// #     input_event::*,
-    /// #     simulators::enigo::EnigoKeyExt
-    /// # };
-    /// # let this = enigo::Key::Alt;
-    /// # let to = true;
-    /// # let output =
-    /// SetTo { input: this, to: to }
-    /// # ;
-    /// # assert_eq!(this.set_to(to), output);
-    /// ```
-    fn set_to(self, to: bool) -> SetTo<Self, bool> {
-        SetTo { input: self, to }
-    }
-
-    /// Press the key.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{
-    /// #     prelude::*,
-    /// #     input_event::*,
-    /// #     simulators::enigo::EnigoKeyExt
-    /// # };
-    /// # let this = enigo::Key::Alt;
-    /// # let output =
-    /// SetTo { input: this, to: true }
-    /// # ;
-    /// # assert_eq!(this.down(), output);
-    /// ```
-    fn down(self) -> SetTo<Self, bool> {
-        self.set_to(true)
-    }
-
-    /// Release the button.
-    /// Release the key
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{
-    /// #     prelude::*,
-    /// #     input_event::*,
-    /// #     simulators::enigo::EnigoKeyExt
-    /// # };
-    /// # let this = enigo::Key::Alt;
-    /// # let output =
-    /// SetTo { input: this, to: false }
-    /// # ;
-    /// # assert_eq!(this.up(), output);
-    /// ```
-    fn up(self) -> SetTo<Self, bool> {
-        self.set_to(false)
-    }
-
-    /// Press and release the key.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{
-    /// #     prelude::*,
-    /// #     input_event::*,
-    /// #     simulators::enigo::EnigoKeyExt
-    /// # };
-    /// # let this = enigo::Key::Alt;
-    /// # let output =
-    /// (
-    ///     SetTo { input: this, to: true },
-    ///     SetTo { input: this, to: false }
-    /// ).seq()
-    /// # ;
-    /// # assert_eq!(this.click(), output);
-    /// ```
-    fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)> {
-        self.clone().down().then(self.up())
-    }
-}
-
-impl EnigoKeyExt for enigo::Key {}
-impl EnigoKeyExt for enigo::MouseButton {}
+impl ButtonLike for enigo::Key {}
+impl ButtonLike for enigo::MouseButton {}
 
 /// Simulate input using `Enigo`.
 ///
