@@ -9,11 +9,16 @@ documentation = "https://docs.rs/kemuler"
 homepage = "https://github.com/Multirious/kemuler"
 repository = "https://github.com/Multirious/kemuler"
 readme = "README.md"
-keywords = ["input", "mouse", "testing", "keyboard", "automation"]
+keywords = ["input", "testing", "automation", "framework", "kemuler"]
 categories = ["development-tools::testing", "api-bindings", "hardware-support"]
 license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace]
+members = [
+  "simulators/*",
+]
 
 [dependencies]
 enigo = { version = "0.1.1", optional = true }
