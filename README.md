@@ -14,7 +14,7 @@ Why? Combinators!
 ```rust
 # // This exmaple is using a private simulator for demonstration purposes.
 # // It is not available in public API.
-# use kemuler::simulators::string_event_logger::StringEventLogger as Simulator;
+# use kemuler::string_event_logger::StringEventLogger as Simulator;
 use kemuler::prelude::*;
 // use a simulator your heart desired
 // (your heart must also implement one if there's none)

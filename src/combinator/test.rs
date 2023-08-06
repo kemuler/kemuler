@@ -1,7 +1,7 @@
 use std::time::{Duration, Instant};
 
 use crate::prelude::*;
-use crate::{assert_event, simulators::string_event_logger::StringEventLogger as S};
+use crate::{assert_event, string_event_logger::StringEventLogger as S};
 
 use super::Sleep;
 
@@ -41,6 +41,7 @@ fn combinator_sleep() {
 }
 
 #[test]
+#[ignore = "not implemented"]
 fn combinator_spin_sleep() {
     todo!()
 }

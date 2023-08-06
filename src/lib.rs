@@ -6,7 +6,7 @@
 //! ## The basic
 //!
 //! ```
-//! # use kemuler::simulators::string_event_logger::StringEventLogger as Simulator;
+//! # use kemuler::string_event_logger::StringEventLogger as Simulator;
 //! # use kemuler::assert_event;
 //! use kemuler::prelude::*;
 //!
@@ -27,7 +27,7 @@
 //!
 //! `.then` method chains simulatable together to run one by one.
 //! ```
-//! # use kemuler::simulators::string_event_logger::StringEventLogger as Simulator;
+//! # use kemuler::string_event_logger::StringEventLogger as Simulator;
 //! # use kemuler::assert_event;
 //! use kemuler::prelude::*;
 //! use kemuler::combinator::Sleep;
@@ -54,7 +54,7 @@
 //! (`then` actually returns this)
 //! ```
 //! # use kemuler::{
-//! #     simulators::string_event_logger::StringEventLogger as Simulator,
+//! #     string_event_logger::StringEventLogger as Simulator,
 //! #     assert_event, prelude::*, combinator::Sleep
 //! # };
 //! # let mut s = Simulator::new();
@@ -82,7 +82,7 @@
 //! as long as the item is simulatable.
 //! ```
 //! # use kemuler::{
-//! #     simulators::string_event_logger::StringEventLogger as Simulator,
+//! #     string_event_logger::StringEventLogger as Simulator,
 //! #     assert_event, prelude::*, combinator::Sleep
 //! # };
 //! # let mut s = Simulator::new();
@@ -108,7 +108,7 @@
 //! Other useful combinators!
 //! ```
 //! # use kemuler::{
-//! #     simulators::string_event_logger::StringEventLogger as Simulator,
+//! #     string_event_logger::StringEventLogger as Simulator,
 //! #     assert_event, prelude::*
 //! # };
 //! # let mut s = Simulator::new();
@@ -144,7 +144,9 @@ pub mod simulatable;
 pub mod simulator;
 
 pub mod common_inputs;
-pub mod simulators;
+#[cfg(any(test, doctest, feature = "test"))]
+#[macro_use]
+pub mod string_event_logger;
 
 pub mod prelude {
     //! Re-exports
