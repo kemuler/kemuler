@@ -52,4 +52,4 @@ See crate's document for more examples.
 Simulators that are being maintained by this crate.
 (a simulator is just a backend)
 
-[`kemuler4enigo`](https://github.com/kemuler/kemuler4enigo)
+[`kemuler-enigo`](https://github.com/kemuler/kemuler-enigo)
