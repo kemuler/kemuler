@@ -6,62 +6,122 @@
 use crate::{combinator::*, input_event::*};
 use std::fmt;
 
-/// The whole thing is a convenience shorthand
-pub trait ButtonLike: Sized {
-    /// Set this button state
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::input_event::*;
-    /// # let this = 0i32;
-    /// # let to = 0i32;
-    /// SetTo { input: this, to: to }
-    /// # ;
-    /// ```
-    fn set_to(self, to: bool) -> SetTo<Self, bool> {
-        SetTo { input: self, to }
-    }
+/// This macro generate convenient methods usable for traits and impl blocks.
+/// Must only be used inside trait definitons and impl block definitions.
+#[macro_export]
+macro_rules! button_like_impl_body {
+    () => {
+        /// Set this button state
+        /// This is a convenience shorthand for
+        /// ```
+        /// # use kemuler::input_event::*;
+        /// # let this = 0i32;
+        /// # let to = 0i32;
+        /// SetTo { input: this, to: to }
+        /// # ;
+        /// ```
+        fn set_to(self, to: bool) -> SetTo<Self, bool> {
+            SetTo { input: self, to }
+        }
 
-    /// Press the button.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::input_event::*;
-    /// # let this = 0i32;
-    /// SetTo { input: this, to: true }
-    /// # ;
-    /// ```
-    fn down(self) -> SetTo<Self, bool> {
-        self.set_to(true)
-    }
+        /// Press the button.
+        /// This is a convenience shorthand for
+        /// ```
+        /// # use kemuler::input_event::*;
+        /// # let this = 0i32;
+        /// SetTo { input: this, to: true }
+        /// # ;
+        /// ```
+        fn down(self) -> SetTo<Self, bool> {
+            self.set_to(true)
+        }
 
-    /// Release the key
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::input_event::*;
-    /// # let this = 0i32;
-    /// SetTo { input: this, to: false }
-    /// # ;
-    /// ```
-    fn up(self) -> SetTo<Self, bool> {
-        self.set_to(false)
-    }
+        /// Release the key
+        /// This is a convenience shorthand for
+        /// ```
+        /// # use kemuler::input_event::*;
+        /// # let this = 0i32;
+        /// SetTo { input: this, to: false }
+        /// # ;
+        /// ```
+        fn up(self) -> SetTo<Self, bool> {
+            self.set_to(false)
+        }
 
-    /// Press and release the button consecutively.
-    /// This is a convenience shorthand for
-    /// ```
-    /// # use kemuler::{prelude::*, input_event::*};
-    /// # let this = 0i32;
-    /// (
-    ///     SetTo { input: this, to: true },
-    ///     SetTo { input: this, to: false }
-    /// ).seq()
-    /// # ;
-    /// ```
-    fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)>
-    where
-        Self: Clone,
-    {
-        self.clone().down().then(self.up())
-    }
+        /// Press and release the button consecutively.
+        /// This is a convenience shorthand for
+        /// ```
+        /// # use kemuler::{prelude::*, input_event::*};
+        /// # let this = 0i32;
+        /// (
+        ///     SetTo { input: this, to: true },
+        ///     SetTo { input: this, to: false }
+        /// ).seq()
+        /// # ;
+        /// ```
+        fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)>
+        where
+            Self: Clone,
+        {
+            self.clone().down().then(self.up())
+        }
+    };
+    (pub) => {
+        /// Set this button state
+        /// This is a convenience shorthand for
+        /// ```
+        /// # use kemuler::input_event::*;
+        /// # let this = 0i32;
+        /// # let to = 0i32;
+        /// SetTo { input: this, to: to }
+        /// # ;
+        /// ```
+        pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
+            SetTo { input: self, to }
+        }
+
+        /// Press the button.
+        /// This is a convenience shorthand for
+        /// ```
+        /// # use kemuler::input_event::*;
+        /// # let this = 0i32;
+        /// SetTo { input: this, to: true }
+        /// # ;
+        /// ```
+        pub fn down(self) -> SetTo<Self, bool> {
+            self.set_to(true)
+        }
+
+        /// Release the key
+        /// This is a convenience shorthand for
+        /// ```
+        /// # use kemuler::input_event::*;
+        /// # let this = 0i32;
+        /// SetTo { input: this, to: false }
+        /// # ;
+        /// ```
+        pub fn up(self) -> SetTo<Self, bool> {
+            self.set_to(false)
+        }
+
+        /// Press and release the button consecutively.
+        /// This is a convenience shorthand for
+        /// ```
+        /// # use kemuler::{prelude::*, input_event::*};
+        /// # let this = 0i32;
+        /// (
+        ///     SetTo { input: this, to: true },
+        ///     SetTo { input: this, to: false }
+        /// ).seq()
+        /// # ;
+        /// ```
+        pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)>
+        where
+            Self: Clone,
+        {
+            self.clone().down().then(self.up())
+        }
+    };
 }
 
 #[rustfmt::skip]
@@ -86,7 +146,9 @@ pub enum Key {
     UpArrow, DownArrow, LeftArrow, RightArrow,
 }
 
-impl ButtonLike for Key {}
+impl Key {
+    button_like_impl_body! {pub}
+}
 
 impl fmt::Display for Key {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -181,7 +243,9 @@ pub enum MouseButton {
     Right,
 }
 
-impl ButtonLike for MouseButton {}
+impl MouseButton {
+    button_like_impl_body! {pub}
+}
 
 impl fmt::Display for MouseButton {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -192,7 +256,9 @@ impl fmt::Display for MouseButton {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Char(pub char);
 
-impl ButtonLike for Char {}
+impl Char {
+    button_like_impl_body! {pub}
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct StrSequence<'a>(pub &'a str);
