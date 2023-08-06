@@ -30,13 +30,5 @@ spin_sleep = ["dep:spin_sleep"]
 # (it is not counted as a breaking change when removed)
 test = []
 
-[[example]]
-name = "auto-clicker"
-required-features = ["enigo"]
-
-[[example]]
-name = "mouse-circle"
-required-features = ["enigo"]
-
 [package.metadata.docs.rs]
-features = ["enigo"]
+features = ["spin_sleep"]
