@@ -51,9 +51,9 @@ See crate's document for more examples.
 # Installation
 Using Cargo command:
 ```sh
-cargo add --git https://github.com/kemuler/kemuler
+cargo add --git "https://github.com/kemuler/kemuler"
 ```
-or add this to your Cargo.toml dependencies:
+or add the following to your Cargo.toml dependencies:
 ```toml
 kemuler = { git = "https://github.com/kemuler/kemuler" }
 ```
@@ -66,11 +66,11 @@ Assuming using `kemuler-enigo` since it's cross-platform.
 
 Using Cargo command:
 ```sh
-cargo add --git https://github.com/kemuler/kemuler-enigo
+cargo add --git "https://github.com/kemuler/kemuler-enigo"
 ```
-or add this to your Cargo.toml dependencies:
+or add the following to your Cargo.toml dependencies:
 ```toml
-kemuler-enigo = { git = https://github.com/kemuler/kemuler-enigo }
+kemuler-enigo = { git = "https://github.com/kemuler/kemuler-enigo" }
 ```
 
 # Simulators
