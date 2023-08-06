@@ -60,7 +60,7 @@ kemuler = { git = "https://github.com/kemuler/kemuler" }
 
 Adding `kemuler` on its own wouldn't do anything.
 You must import a simulator (means backend) or implements one to actually simulate an input.
-Head to [Simulators](https://github.com/kemuler/kemuler#simulators) section to see cooked and ready simulator and add to your Cargo.toml dependencies.
+Head to [Simulators](https://github.com/kemuler/kemuler#simulators) section to see cooked and ready simulator to be added to your dependencies.
 
 Assuming using `kemuler-enigo` since it's cross-platform.
 
