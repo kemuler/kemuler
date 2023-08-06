@@ -54,3 +54,5 @@ Simulators that are being maintained by this crate.
 
 - [`kemuler-enigo`](https://github.com/kemuler/kemuler-enigo)
 - [`kemuler-windows`](https://github.com/kemuler/kemuler-windows)
+
+[kemuler_repo]: https://github.com/kemuler/kemuler
