@@ -144,9 +144,12 @@ pub mod simulatable;
 pub mod simulator;
 
 pub mod common_inputs;
+// this is pub because it only exist in test so no user can see it
+// (unless feature = "test")
+// (reminder for my dumbass)
 #[cfg(any(test, doctest, feature = "test"))]
 #[macro_use]
-mod string_event_logger;
+pub mod string_event_logger;
 
 pub mod prelude {
     //! Re-exports
