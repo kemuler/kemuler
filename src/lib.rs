@@ -146,7 +146,7 @@ pub mod simulator;
 pub mod common_inputs;
 #[cfg(any(test, doctest, feature = "test"))]
 #[macro_use]
-pub mod string_event_logger;
+mod string_event_logger;
 
 pub mod prelude {
     //! Re-exports
