@@ -66,7 +66,7 @@ Assuming using `kemuler-enigo` since it's cross-platform.
 
 Using Cargo command:
 ```sh
-cargo add --git https://github.com/kemuler/kemuler
+cargo add --git https://github.com/kemuler/kemuler-enigo
 ```
 or add this to your Cargo.toml dependencies:
 ```toml
