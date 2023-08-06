@@ -52,27 +52,4 @@ See crate's document for more examples.
 Simulators that are being maintained by this crate.
 (a simulator is just a backend)
 
-## Enigo
-**Cross-platform input simulator.**
-
-Support for [`enigo`][enigo_repo].
-This is the og crate that helpd me make this crate.
-
-## Windows
-*WIP; it is currently on the branch, `windows`.*
-
-**Windows input simulator.**
-An improvement over `enigo`'s Windows implementation.
-
-Differences to `enigo`:
-  Mouse input will work on application (mostly games)
-  that uses DirectX/DirectInput/*somethingsomething*;
-  that is currently not the case on `enigo`,
-  see this [issue](https://github.com/enigo-rs/enigo/issues/172/).
-
-  `VirtualKey` enum's variants are more easier to search for.
-  They had more intuitive names and doc aliases are added.
-  More detailed documentation is also written.
-
-[enigo_repo]: https://github.com/enigo-rs/enigo/ "Enigo Repository"
-[kemuler_repo]: https://github.com/Multirious/kemuler/ "Kemuler Repository"
+[`kemuler4enigo`](https://github.com/kemuler/kemuler4enigo)
