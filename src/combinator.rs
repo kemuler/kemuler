@@ -134,7 +134,7 @@ where
 /// Supported size: 0 <= size <= 32
 /// Nest them if you ever need more.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Sequence<T>(T);
+pub struct Sequence<T>(pub T);
 
 /// put statments in reverse order
 macro_rules! reverse_order {

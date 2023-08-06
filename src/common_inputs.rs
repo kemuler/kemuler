@@ -51,12 +51,12 @@ macro_rules! button_like_impl_body {
         /// Press and release the button consecutively.
         /// This is a convenience shorthand for
         /// ```
-        /// # use kemuler::{prelude::*, input_event::*};
+        /// # use kemuler::{prelude::*, input_event::*, combinator::*};
         /// # let this = 0i32;
-        /// (
+        /// Sequence((
         ///     SetTo { input: this, to: true },
         ///     SetTo { input: this, to: false }
-        /// ).seq()
+        /// ))
         /// # ;
         /// ```
         fn click(
@@ -112,12 +112,12 @@ macro_rules! button_like_impl_body {
         /// Press and release the button consecutively.
         /// This is a convenience shorthand for
         /// ```
-        /// # use kemuler::{prelude::*, input_event::*};
+        /// # use kemuler::{prelude::*, input_event::*, combinator::*};
         /// # let this = 0i32;
-        /// (
+        /// Sequence((
         ///     SetTo { input: this, to: true },
         ///     SetTo { input: this, to: false }
-        /// ).seq()
+        /// ))
         /// # ;
         /// ```
         pub fn click(
@@ -129,7 +129,7 @@ macro_rules! button_like_impl_body {
         where
             Self: Clone,
         {
-            self.clone().down().then(self.up())
+            $crate::combinator::Sequence((self.clone().down(), self.up()))
         }
     };
 }
