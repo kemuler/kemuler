@@ -49,21 +49,27 @@ If you've got some more useful combinator, please submit an issue on [GitHub][ke
 See crate's document for more examples.
 
 # Installation
-Using Cargo command
+Using Cargo command:
 ```sh
 cargo add --git https://github.com/kemuler/kemuler
 ```
-or add this to your Cargo.toml dependencies
+or add this to your Cargo.toml dependencies:
 ```toml
 kemuler = { git = "https://github.com/kemuler/kemuler" }
 ```
 
 Adding `kemuler` on its own wouldn't do anything.
 You must import a simulator (means backend) or implements one to actually simulate an input.
-Head to [Simulators](https://github.com/kemuler/kemuler#simulators) section to see cooked and ready simulator and add to your Cargo.toml dependencies
-like so:
+Head to [Simulators](https://github.com/kemuler/kemuler#simulators) section to see cooked and ready simulator and add to your Cargo.toml dependencies.
+
+Assuming using `kemuler-enigo` since it's cross-platform.
+
+Using Cargo command:
+```sh
+cargo add --git https://github.com/kemuler/kemuler
 ```
-# assuming using `kemuler-enigo` since it's cross-platform
+or add this to your Cargo.toml dependencies:
+```toml
 kemuler-enigo = { git = https://github.com/kemuler/kemuler-enigo }
 ```
 
