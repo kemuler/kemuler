@@ -20,8 +20,8 @@ macro_rules! button_like_impl_body {
         /// SetTo { input: this, to: to }
         /// # ;
         /// ```
-        fn set_to(self, to: bool) -> SetTo<Self, bool> {
-            SetTo { input: self, to }
+        fn set_to(self, to: bool) -> $crate::input_event::SetTo<Self, bool> {
+            $crate::input_event::SetTo { input: self, to }
         }
 
         /// Press the button.
@@ -32,7 +32,7 @@ macro_rules! button_like_impl_body {
         /// SetTo { input: this, to: true }
         /// # ;
         /// ```
-        fn down(self) -> SetTo<Self, bool> {
+        fn down(self) -> $crate::input_event::SetTo<Self, bool> {
             self.set_to(true)
         }
 
@@ -44,7 +44,7 @@ macro_rules! button_like_impl_body {
         /// SetTo { input: this, to: false }
         /// # ;
         /// ```
-        fn up(self) -> SetTo<Self, bool> {
+        fn up(self) -> $crate::input_event::SetTo<Self, bool> {
             self.set_to(false)
         }
 
@@ -59,7 +59,12 @@ macro_rules! button_like_impl_body {
         /// ).seq()
         /// # ;
         /// ```
-        fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)>
+        fn click(
+            self,
+        ) -> $crate::combinator::Sequence<(
+            $crate::input_event::SetTo<Self, bool>,
+            $crate::input_event::SetTo<Self, bool>,
+        )>
         where
             Self: Clone,
         {
@@ -76,8 +81,8 @@ macro_rules! button_like_impl_body {
         /// SetTo { input: this, to: to }
         /// # ;
         /// ```
-        pub fn set_to(self, to: bool) -> SetTo<Self, bool> {
-            SetTo { input: self, to }
+        pub fn set_to(self, to: bool) -> $crate::input_event::SetTo<Self, bool> {
+            $crate::input_event::SetTo { input: self, to }
         }
 
         /// Press the button.
@@ -88,7 +93,7 @@ macro_rules! button_like_impl_body {
         /// SetTo { input: this, to: true }
         /// # ;
         /// ```
-        pub fn down(self) -> SetTo<Self, bool> {
+        pub fn down(self) -> $crate::input_event::SetTo<Self, bool> {
             self.set_to(true)
         }
 
@@ -100,7 +105,7 @@ macro_rules! button_like_impl_body {
         /// SetTo { input: this, to: false }
         /// # ;
         /// ```
-        pub fn up(self) -> SetTo<Self, bool> {
+        pub fn up(self) -> $crate::input_event::SetTo<Self, bool> {
             self.set_to(false)
         }
 
@@ -115,7 +120,12 @@ macro_rules! button_like_impl_body {
         /// ).seq()
         /// # ;
         /// ```
-        pub fn click(self) -> Sequence<(SetTo<Self, bool>, SetTo<Self, bool>)>
+        pub fn click(
+            self,
+        ) -> $crate::combinator::Sequence<(
+            $crate::input_event::SetTo<Self, bool>,
+            $crate::input_event::SetTo<Self, bool>,
+        )>
         where
             Self: Clone,
         {
