@@ -68,7 +68,7 @@ macro_rules! button_like_impl_body {
         where
             Self: Clone,
         {
-            self.clone().down().then(self.up())
+            $crate::combinator::Sequence((self.clone().down(), self.up()))
         }
     };
     (pub) => {
