@@ -52,7 +52,10 @@ pub trait Combine: Sized {
     /// Simulate self during an event.
     /// After self is simulated, the *during* event is inverted
     /// and simulated at the end.
-    fn during<DS>(self, during: DS) -> During<DS, Self> {
+    fn during<DS>(self, during: DS) -> During<DS, Self>
+    where
+        DS: Invert + Clone,
+    {
         During {
             during,
             simulate: self,
@@ -280,11 +283,11 @@ pub struct During<DS, S> {
     simulate: S,
 }
 
-impl<WS, S, Smlt> Simulatable<Smlt> for During<WS, S>
+impl<DS, S, Smlt> Simulatable<Smlt> for During<DS, S>
 where
     S: Simulatable<Smlt>,
-    WS: Invert + Simulatable<Smlt> + Clone,
-    <WS as Invert>::Output: Simulatable<Smlt>,
+    DS: Invert + Simulatable<Smlt> + Clone,
+    <DS as Invert>::Output: Simulatable<Smlt>,
 {
     fn run_with(self, simulator: &mut Smlt) {
         self.during.clone().run_with(simulator);
