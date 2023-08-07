@@ -156,6 +156,8 @@ pub mod prelude {
 
     use super::*;
 
+    #[cfg(feature = "spin_sleep")]
+    pub use combinator::SpinSleep;
     pub use combinator::{Combine, Sleep};
     pub use common_inputs::*;
     pub use simulatable::Simulatable;
