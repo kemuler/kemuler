@@ -16,6 +16,32 @@ macro_rules! assert_event {
     };
 }
 
+#[macro_export]
+macro_rules! assert_events {
+    (
+        $logger:ident,
+        $start_idx:expr,
+        $(
+            $event:expr,
+        )*
+    ) => {
+        $crate::assert_events!(@assert_event $logger, $start_idx, $($event,)*);
+    };
+    (@assert_event $logger:ident, $at:expr, $event:expr,) => {
+        $crate::assert_event!(
+            $logger, $at, $event
+        );
+    };
+    (@assert_event $logger:ident, $at:expr, $event:expr, $($next_events:expr,)*) => {
+        $crate::assert_event!(
+            $logger, $at, $event
+        );
+        $crate::assert_events!(
+            $logger, $at + 1, $($next_events,)*
+        );
+    };
+}
+
 /// A simulator that doesn't simulate anything,
 /// it, instead, collect what input has been given.
 /// This is currently used as a mock simulator for testing
