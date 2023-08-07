@@ -24,6 +24,12 @@ pub struct SetTo<I, V> {
     pub to: V,
 }
 
+impl<I, V> SetTo<I, V> {
+    pub fn new(input: I, to: V) -> SetTo<I, V> {
+        SetTo { input, to }
+    }
+}
+
 impl<I, V, Smlt> Simulatable<Smlt> for SetTo<I, V>
 where
     Smlt: Simulate<Self>,
@@ -60,6 +66,12 @@ pub struct ChangeBy<I, V> {
     pub by: V,
 }
 
+impl<I, V> ChangeBy<I, V> {
+    pub fn new(input: I, by: V) -> ChangeBy<I, V> {
+        ChangeBy { input, by }
+    }
+}
+
 impl<I, V, Smlt> Simulatable<Smlt> for ChangeBy<I, V>
 where
     Smlt: Simulate<Self>,
@@ -82,6 +94,12 @@ where
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Execute<I> {
     pub input: I,
+}
+
+impl<I> Execute<I> {
+    pub fn new(input: I) -> Execute<I> {
+        Execute { input }
+    }
 }
 
 impl<I, Smlt> Simulatable<Smlt> for Execute<I>
