@@ -1,7 +1,4 @@
 //! Generally found/a standard input
-//!
-//! This is currently pretty much incomplete.
-//! Prefer `enigo` and their `Key` and `MouseButton` for most cases.
 
 use crate::input_event::*;
 use std::fmt;
@@ -21,7 +18,7 @@ macro_rules! button_like_impl_body {
         /// # ;
         /// ```
         fn set_to(self, to: bool) -> $crate::input_event::SetTo<Self, bool> {
-            $crate::input_event::SetTo { input: self, to }
+            $crate::input_event::SetTo::new(self, to)
         }
 
         /// Press the button.
@@ -82,7 +79,7 @@ macro_rules! button_like_impl_body {
         /// # ;
         /// ```
         pub fn set_to(self, to: bool) -> $crate::input_event::SetTo<Self, bool> {
-            $crate::input_event::SetTo { input: self, to }
+            $crate::input_event::SetTo::new(self, to)
         }
 
         /// Press the button.
