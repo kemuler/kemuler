@@ -8,6 +8,12 @@ use crate::{input_event::Invert, simulatable::Simulatable};
 #[cfg(test)]
 mod test;
 
+#[cfg(feature = "spin_sleep")]
+mod spin_sleep;
+
+#[cfg(feature = "spin_sleep")]
+pub use self::spin_sleep::SpinSleep;
+
 /// Helper combinator trait.
 pub trait Combine: Sized {
     /// Simulate `self` and then `next`
@@ -115,36 +121,6 @@ impl fmt::Display for Sleep {
     }
 }
 
-/// Accurate thread sleep for amount of time using [`spin_sleep`](https://crates.io/crates/spin_sleep).
-#[cfg(feature = "spin_sleep")]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct SpinSleep(pub Duration);
-
-#[cfg(feature = "spin_sleep")]
-impl SpinSleep {
-    pub fn new(duration: Duration) -> SpinSleep {
-        SpinSleep(duration)
-    }
-}
-
-#[cfg(feature = "spin_sleep")]
-impl<Smlt> Simulatable<Smlt> for SpinSleep {
-    fn run_with(self, _: &mut Smlt) {
-        spin_sleep::sleep(self.0)
-    }
-}
-
-#[cfg(feature = "spin_sleep")]
-impl fmt::Display for SpinSleep {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "[spin sleep {} ms]", self.0.as_millis())
-    }
-}
-
-#[cfg(feature = "spin_sleep")]
-impl From<Sleep> for SpinSleep {
-    fn from(value: Sleep) -> Self {
-        SpinSleep::new(value.0)
 impl From<Duration> for Sleep {
     fn from(value: Duration) -> Self {
         Sleep::new(value)
