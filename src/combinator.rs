@@ -17,11 +17,11 @@ pub trait Combine: Sized {
 
     /// Simulate `self` and then sleep for duration
     fn sleep(self, duration: Duration) -> Sequence<(Self, Sleep)> {
-        self.then(Sleep(duration))
+        self.then(Sleep::new(duration))
     }
 
     /// Simulate `self` and then sleep for duration in milliseconds
-    fn sleep_ms(self, duration: u64) -> Sequence<(Self, Sleep)> {
+    fn sleep_for_millis(self, duration: u64) -> Sequence<(Self, Sleep)> {
         self.sleep(Duration::from_millis(duration))
     }
 
@@ -67,8 +67,36 @@ impl<S> Combine for S {}
 pub struct Sleep(pub Duration);
 
 impl Sleep {
-    pub fn from_ms(ms: u64) -> Sleep {
-        Sleep(Duration::from_millis(ms))
+    pub fn new(duration: Duration) -> Sleep {
+        Sleep(duration)
+    }
+
+    /// # Panics
+    /// This constructor will panic if `secs` is negative, overflows `Duration` or not finite.
+    pub fn for_secs_f64(secs: f64) -> Sleep {
+        Sleep::new(Duration::from_secs_f64(secs))
+    }
+
+    /// # Panics
+    /// This constructor will panic if `secs` is negative, overflows `Duration` or not finite.
+    pub fn for_secs_f32(secs: f32) -> Sleep {
+        Sleep::new(Duration::from_secs_f32(secs))
+    }
+
+    pub fn for_secs(secs: u64) -> Sleep {
+        Sleep::new(Duration::from_secs(secs))
+    }
+
+    pub fn for_millis(millis: u64) -> Sleep {
+        Sleep::new(Duration::from_millis(millis))
+    }
+
+    pub fn for_micros(micros: u64) -> Sleep {
+        Sleep::new(Duration::from_micros(micros))
+    }
+
+    pub fn for_nanos(nanos: u64) -> Sleep {
+        Sleep::new(Duration::from_nanos(nanos))
     }
 }
 
@@ -90,9 +118,16 @@ impl fmt::Display for Sleep {
 pub struct SpinSleep(pub Duration);
 
 #[cfg(feature = "spin_sleep")]
+impl SpinSleep {
+    pub fn new(duration: Duration) -> SpinSleep {
+        SpinSleep(duration)
+    }
+}
+
+#[cfg(feature = "spin_sleep")]
 impl<Smlt> Simulatable<Smlt> for SpinSleep {
     fn run_with(self, _: &mut Smlt) {
-        spin_sleep::sleep(self.0);
+        spin_sleep::sleep(self.0)
     }
 }
 
