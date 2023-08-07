@@ -156,7 +156,7 @@ pub mod prelude {
 
     use super::*;
 
-    pub use combinator::Combine;
+    pub use combinator::{Combine, Sleep};
     pub use common_inputs::*;
     pub use simulatable::Simulatable;
 }
