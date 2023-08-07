@@ -141,6 +141,13 @@ impl fmt::Display for SpinSleep {
     }
 }
 
+#[cfg(feature = "spin_sleep")]
+impl From<Sleep> for SpinSleep {
+    fn from(value: Sleep) -> Self {
+        SpinSleep::new(value.0)
+    }
+}
+
 /// Simulate an input for amount of times
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Repeat<S> {
