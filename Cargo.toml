@@ -5,7 +5,7 @@ authors = [ "Multirious" ]
 edition = "2021"
 
 description = "Experimental high level input simulation tool using combinators"
-documentation = "https://docs.rs/kemuler"
+documentation = "https://kemuler.github.io/kemuler/kemuler"
 homepage = "https://github.com/Multirious/kemuler"
 repository = "https://github.com/Multirious/kemuler"
 readme = "README.md"

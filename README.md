@@ -46,6 +46,7 @@ Currently, there are only a few amount of combinators present.
 If you've got some more useful combinator, please submit an issue on [GitHub][kemuler_repo]!
 
 See crate's document for more examples.
+Documentation currently live at https://kemuler.github.io/kemuler/kemuler.
 
 # Installation
 Using Cargo command:
