@@ -1,7 +1,7 @@
 use std::time::{Duration, Instant};
 
 use crate::prelude::*;
-use crate::{assert_event, string_event_logger::StringEventLogger as S};
+use crate::{assert_events, string_event_logger::StringEventLogger as S};
 
 use super::Sleep;
 
@@ -10,9 +10,7 @@ fn combinator_then() {
     let mut s = S::new();
     let x = Key::F1.down().then(Key::F2.down()).then(Key::F3.up());
     x.run_with(&mut s);
-    assert_event!(s, 0, Key::F1.down());
-    assert_event!(s, 1, Key::F2.down());
-    assert_event!(s, 2, Key::F3.up());
+    assert_events!(s, 0, Key::F1.down(), Key::F2.down(), Key::F3.up(),);
     assert_eq!(s.data.len(), 3);
 }
 
@@ -51,11 +49,15 @@ fn combinator_repeat() {
     let mut s = S::new();
     let x = Key::Home.down().repeat(5);
     x.run_with(&mut s);
-    assert_event!(s, 0, Key::Home.down());
-    assert_event!(s, 1, Key::Home.down());
-    assert_event!(s, 2, Key::Home.down());
-    assert_event!(s, 3, Key::Home.down());
-    assert_event!(s, 4, Key::Home.down());
+    assert_events!(
+        s,
+        0,
+        Key::Home.down(),
+        Key::Home.down(),
+        Key::Home.down(),
+        Key::Home.down(),
+        Key::Home.down(),
+    );
     assert_eq!(s.data.len(), 5);
 }
 
@@ -64,14 +66,18 @@ fn combinator_repeat_complex() {
     let mut s = S::new();
     let x = Key::Home.down().repeat(3).then(Key::Tab.up()).repeat(2);
     x.run_with(&mut s);
-    assert_event!(s, 0, Key::Home.down());
-    assert_event!(s, 1, Key::Home.down());
-    assert_event!(s, 2, Key::Home.down());
-    assert_event!(s, 3, Key::Tab.up());
-    assert_event!(s, 4, Key::Home.down());
-    assert_event!(s, 5, Key::Home.down());
-    assert_event!(s, 6, Key::Home.down());
-    assert_event!(s, 7, Key::Tab.up());
+    assert_events!(
+        s,
+        0,
+        Key::Home.down(),
+        Key::Home.down(),
+        Key::Home.down(),
+        Key::Tab.up(),
+        Key::Home.down(),
+        Key::Home.down(),
+        Key::Home.down(),
+        Key::Tab.up(),
+    );
     assert_eq!(s.data.len(), 8);
 }
 
@@ -83,11 +89,15 @@ fn combinator_iter_seq() {
         .map(|k| k.down())
         .iter_seq();
     x.run_with(&mut s);
-    assert_event!(s, 0, Key::F1.down());
-    assert_event!(s, 1, Key::F2.down());
-    assert_event!(s, 2, Key::F3.down());
-    assert_event!(s, 3, Key::F4.down());
-    assert_event!(s, 4, Key::F5.down());
+    assert_events!(
+        s,
+        0,
+        Key::F1.down(),
+        Key::F2.down(),
+        Key::F3.down(),
+        Key::F4.down(),
+        Key::F5.down(),
+    );
     assert_eq!(s.data.len(), 5);
 }
 
@@ -101,9 +111,13 @@ fn combinator_seq() {
     )
         .seq();
     x.run_with(&mut s);
-    assert_event!(s, 0, Key::DownArrow.down());
-    assert_event!(s, 1, MouseButton::Left.up());
-    assert_event!(s, 2, MousePosition.move_to(25, 10));
+    assert_events!(
+        s,
+        0,
+        Key::DownArrow.down(),
+        MouseButton::Left.up(),
+        MousePosition.move_to(25, 10),
+    );
     assert_eq!(s.data.len(), 3);
 }
 
@@ -120,10 +134,14 @@ fn combinator_during() {
     let mut s = S::new();
     let x = Key::Tab.click().during(Key::Alt.down());
     x.run_with(&mut s);
-    assert_event!(s, 0, Key::Alt.down());
-    assert_event!(s, 1, Key::Tab.down());
-    assert_event!(s, 2, Key::Tab.up());
-    assert_event!(s, 3, Key::Alt.up());
+    assert_events!(
+        s,
+        0,
+        Key::Alt.down(),
+        Key::Tab.down(),
+        Key::Tab.up(),
+        Key::Alt.up(),
+    );
     assert_eq!(s.data.len(), 4);
 }
 
@@ -135,11 +153,15 @@ fn combinator_during_nested() {
         .during(Key::Alt.down())
         .during(Key::F1.up());
     x.run_with(&mut s);
-    assert_event!(s, 0, Key::F1.up());
-    assert_event!(s, 1, Key::Alt.down());
-    assert_event!(s, 2, Key::Tab.down());
-    assert_event!(s, 3, Key::Tab.up());
-    assert_event!(s, 4, Key::Alt.up());
-    assert_event!(s, 5, Key::F1.down());
+    assert_events!(
+        s,
+        0,
+        Key::F1.up(),
+        Key::Alt.down(),
+        Key::Tab.down(),
+        Key::Tab.up(),
+        Key::Alt.up(),
+        Key::F1.down(),
+    );
     assert_eq!(s.data.len(), 6);
 }
