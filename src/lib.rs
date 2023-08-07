@@ -1,4 +1,4 @@
-#![doc = include_str!("../README.md")]
+// #![doc = include_str!("../README.md")]
 //! # Examples
 //! All exmaples are using a private simulator for demonstration purposes.
 //! `assert_event` is not available in public API.
@@ -30,9 +30,8 @@
 //! # use kemuler::string_event_logger::StringEventLogger as Simulator;
 //! # use kemuler::assert_event;
 //! use kemuler::prelude::*;
-//! use kemuler::combinator::Sleep;
 //!
-//! // use your preferred simulator—you probably got the gist by now.
+//! // use your preferred simul—ahh you got it.
 //! let mut s = Simulator::new();
 //!
 //! Key::Alt.down()
@@ -55,13 +54,13 @@
 //! ```
 //! # use kemuler::{
 //! #     string_event_logger::StringEventLogger as Simulator,
-//! #     assert_event, prelude::*, combinator::Sleep
+//! #     assert_event, prelude::*
 //! # };
 //! # let mut s = Simulator::new();
 //! (
 //!     Key::Control.down(),
 //!     MouseButton::Right.down(),
-//!     Sleep::from_ms(100),
+//!     Sleep::for_millis(100),
 //!     Key::Control.up(),
 //!     MouseButton::Right.up(),
 //! )
@@ -83,7 +82,7 @@
 //! ```
 //! # use kemuler::{
 //! #     string_event_logger::StringEventLogger as Simulator,
-//! #     assert_event, prelude::*, combinator::Sleep
+//! #     assert_event, prelude::*
 //! # };
 //! # let mut s = Simulator::new();
 //! [
@@ -119,7 +118,7 @@
 //! //
 //! (
 //!     MouseButton::Left.click(),
-//!     Key::Space.click().sleep_ms(10),
+//!     Key::Space.click().sleep_for_millis(10),
 //! )
 //!     .seq()
 //!     .repeat(2)
