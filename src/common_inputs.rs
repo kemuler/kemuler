@@ -3,7 +3,7 @@
 //! This is currently pretty much incomplete.
 //! Prefer `enigo` and their `Key` and `MouseButton` for most cases.
 
-use crate::{combinator::*, input_event::*};
+use crate::input_event::*;
 use std::fmt;
 
 /// This macro generate convenient methods usable for traits and impl blocks.
