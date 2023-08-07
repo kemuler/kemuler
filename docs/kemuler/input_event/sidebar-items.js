@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["ChangeBy","Execute","SetTo"],"trait":["Invert"]};
