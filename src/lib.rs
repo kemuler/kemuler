@@ -7,7 +7,7 @@
 //!
 //! ```
 //! # use kemuler::string_event_logger::StringEventLogger as Simulator;
-//! # use kemuler::assert_event;
+//! # use kemuler::assert_events;
 //! use kemuler::prelude::*;
 //!
 //! let mut s = Simulator::new(); // use your preferred simulator
@@ -17,10 +17,13 @@
 //! Char('w').down().run_with(&mut s);
 //! Char('w').up().run_with(&mut s);
 //!
-//! assert_event!(s, 0, Key::Shift.down());
-//! assert_event!(s, 1, Key::Shift.up());
-//! assert_event!(s, 2, Char('w').down());
-//! assert_event!(s, 3, Char('w').up());
+#![doc = doc_events!(
+    4;
+    "Key::Shift.down()"
+    "Key::Shift.up()"
+    "Char('w').down()"
+    "Char('w').up()"    
+)]
 //! ```
 //!
 //! ## Combinators Overview
@@ -28,7 +31,7 @@
 //! `.then` method chains simulatable together to run one by one.
 //! ```
 //! # use kemuler::string_event_logger::StringEventLogger as Simulator;
-//! # use kemuler::assert_event;
+//! # use kemuler::assert_events;
 //! use kemuler::prelude::*;
 //!
 //! // use your preferred simul—ahh you got it.
@@ -40,11 +43,13 @@
 //!     .then(Key::Tab.up())
 //!     .run_with(&mut s);
 //!
-//! assert_event!(s, 0, Key::Alt.down());
-//! assert_event!(s, 1, Key::Tab.down());
-//! assert_event!(s, 2, Key::Alt.up());
-//! assert_event!(s, 3, Key::Tab.up());
-//! assert_eq!(s.data.len(), 4); // only 4 events has been passed to the simulator
+#![doc = doc_events!(
+    4;
+    "Key::Alt.down()"
+    "Key::Tab.down()"
+    "Key::Alt.up()"
+    "Key::Tab.up()"    
+)]
 //! ```
 //!
 //! Tuple supports! Only up to 32 indexes;
@@ -54,7 +59,7 @@
 //! ```
 //! # use kemuler::{
 //! #     string_event_logger::StringEventLogger as Simulator,
-//! #     assert_event, prelude::*
+//! #     assert_events, prelude::*
 //! # };
 //! # let mut s = Simulator::new();
 //! (
@@ -68,12 +73,13 @@
 //!     .seq()
 //!     .run_with(&mut s);
 //!
-//! assert_event!(s, 0, Key::Control.down());
-//! assert_event!(s, 1, MouseButton::Right.down());
-//! assert_event!(s, 2, Key::Control.up());
-//! assert_event!(s, 3, MouseButton::Right.up());
-//! assert_eq!(s.data.len(), 4); // only 4 events has been passed to the simulator
-//! // sleep event is not logged but it should work :P
+#![doc = doc_events!(
+    4;
+    "Key::Control.down()"
+    "MouseButton::Right.down()"
+    "Key::Control.up()"
+    "MouseButton::Right.up()"    
+)]
 //! ```
 //!
 //! Iterator supports!
@@ -82,7 +88,7 @@
 //! ```
 //! # use kemuler::{
 //! #     string_event_logger::StringEventLogger as Simulator,
-//! #     assert_event, prelude::*
+//! #     assert_events, prelude::*
 //! # };
 //! # let mut s = Simulator::new();
 //! [
@@ -97,18 +103,20 @@
 //!     .iter_seq()
 //!     .run_with(&mut s);
 //!
-//! assert_event!(s, 0, Key::Alt.down());
-//! assert_event!(s, 1, Key::Tab.down());
-//! assert_event!(s, 2, Key::Alt.up());
-//! assert_event!(s, 3, Key::Tab.up());
-//! assert_eq!(s.data.len(), 4); // only 4 events has been passed to the simulator
+#![doc = doc_events!(
+    4;
+    "Key::Alt.down()"
+    "Key::Tab.down()"
+    "Key::Alt.up()"
+    "Key::Tab.up()"    
+)]
 //! ```
 //!
 //! Other useful combinators!
 //! ```
 //! # use kemuler::{
 //! #     string_event_logger::StringEventLogger as Simulator,
-//! #     assert_event, prelude::*
+//! #     assert_events, prelude::*
 //! # };
 //! # let mut s = Simulator::new();
 //! // do these 3 times:
@@ -124,19 +132,44 @@
 //!     .repeat(2)
 //!     .run_with(&mut s);
 //!
-//! assert_event!(s, 0, MouseButton::Left.down());
-//! assert_event!(s, 1, MouseButton::Left.up());
-//! assert_event!(s, 2, Key::Space.down());
-//! assert_event!(s, 3, Key::Space.up());
-//! assert_event!(s, 4, MouseButton::Left.down());
-//! assert_event!(s, 5, MouseButton::Left.up());
-//! assert_event!(s, 6, Key::Space.down());
-//! assert_event!(s, 7, Key::Space.up());
-//! assert_eq!(s.data.len(), 8); // only 8 events has been passed to the simulator
-//! // sleep event is not logged but it should work :P
+#![doc = doc_events!(
+    8;
+    "MouseButton::Left.down()"
+    "MouseButton::Left.up()"
+    "Key::Space.down()"
+    "Key::Space.up()"
+    "MouseButton::Left.down()"
+    "MouseButton::Left.up()"
+    "Key::Space.down()"
+    "Key::Space.up()"
+)]
 //! ```
 #![cfg_attr(all(doc, CHANNEL_NIGHTLY), feature(doc_auto_cfg))]
 
+macro_rules! doc_event {
+    ($event:literal) => {
+        concat!(
+            "// ", $event, ";", // visible to user line
+            "\n# ", $event, "," // invisible to user line
+        )
+    };
+}
+
+macro_rules! doc_events {
+    ($len:literal; $($events:literal)+) => {
+        concat!(
+            "// Inputs that has been passed to the simulator\n",
+            "// (A world without combinator):\n",
+            "# assert_events!(\n",
+            "#     s, 0,\n",
+            $(doc_event!($events), "\n",)+
+            "# );\n",
+            "# assert_eq!(s.data.len(), ",
+            $len,
+            ");",
+        )
+    };
+}
 pub mod combinator;
 pub mod input_event;
 pub mod simulatable;
