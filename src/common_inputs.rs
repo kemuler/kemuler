@@ -270,6 +270,12 @@ impl Char {
     button_like_impl_body! {pub}
 }
 
+impl From<char> for Char {
+    fn from(value: char) -> Self {
+        Char(value)
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct StrSequence<'a>(pub &'a str);
 
@@ -285,5 +291,11 @@ pub struct StrSequence<'a>(pub &'a str);
 impl<'a> StrSequence<'a> {
     pub fn execute(self) -> Execute<Self> {
         Execute { input: self }
+    }
+}
+
+impl<'a> From<&'a str> for StrSequence<'a> {
+    fn from(value: &'a str) -> Self {
+        StrSequence(value)
     }
 }

@@ -145,6 +145,9 @@ impl fmt::Display for SpinSleep {
 impl From<Sleep> for SpinSleep {
     fn from(value: Sleep) -> Self {
         SpinSleep::new(value.0)
+impl From<Duration> for Sleep {
+    fn from(value: Duration) -> Self {
+        Sleep::new(value)
     }
 }
 
