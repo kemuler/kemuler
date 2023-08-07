@@ -28,3 +28,9 @@ impl From<Sleep> for SpinSleep {
         SpinSleep::new(value.0)
     }
 }
+
+impl From<Duration> for SpinSleep {
+    fn from(value: Duration) -> Self {
+        SpinSleep::new(value)
+    }
+}
