@@ -2,7 +2,7 @@
 
 *this crate is currently in a rapid development phase.*
 *~compilation failure will probably be introduced with every 5 commits lol~*
-*Update: Current API design is quite stable. But it's still in development :P.*
+*Update: Current API design is quite stable. But, still, it's in development :P.*
 
 
 Welcome to `kemuler`!
