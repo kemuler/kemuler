@@ -31,6 +31,18 @@ pub trait Combine: Sized {
         self.sleep(Duration::from_millis(duration))
     }
 
+    /// Simulate `self` and then spin sleep for duration
+    #[cfg(feature = "spin_sleep")]
+    fn spin_sleep(self, duration: Duration) -> Sequence<(Self, SpinSleep)> {
+        self.then(SpinSleep::new(duration))
+    }
+
+    /// Simulate `self` and then spin sleep for duration in milliseconds
+    #[cfg(feature = "spin_sleep")]
+    fn spin_sleep_for_millis(self, duration: u64) -> Sequence<(Self, SpinSleep)> {
+        self.spin_sleep(Duration::from_millis(duration))
+    }
+
     /// Repeat simulation for amount of times
     fn repeat(self, times: usize) -> Repeat<Self> {
         Repeat {
