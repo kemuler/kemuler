@@ -291,3 +291,24 @@ where
         write!(f, "[during ({}), do ({})]", self.during, self.simulate)
     }
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Call<F>(F);
+
+impl<Smlt, F> Simulatable<Smlt> for Call<F>
+where
+    F: FnMut(&mut Smlt),
+{
+    fn run_with(mut self, simulator: &mut Smlt) {
+        self.0(simulator)
+    }
+}
+
+impl<F> fmt::Display for Call<F>
+where
+    F: fmt::Display,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "[call {}]", self.0)
+    }
+}
