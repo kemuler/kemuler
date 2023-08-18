@@ -292,6 +292,7 @@ where
     }
 }
 
+/// Call a simulator with a closure
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Call<F>(F);
 
