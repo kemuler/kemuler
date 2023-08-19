@@ -11,8 +11,8 @@ impl SpinSleep {
     }
 }
 
-impl<Smlt> Simulatable<Smlt> for SpinSleep {
-    fn run_with(self, _: &mut Smlt) {
+impl<Smltr> Simulatable<Smltr> for SpinSleep {
+    fn run_with(self, _: &mut Smltr) {
         ::spin_sleep::sleep(self.0)
     }
 }

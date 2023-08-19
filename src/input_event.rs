@@ -30,11 +30,11 @@ impl<I, V> SetTo<I, V> {
     }
 }
 
-impl<I, V, Smlt> Simulatable<Smlt> for SetTo<I, V>
+impl<I, V, Smltr> Simulatable<Smltr> for SetTo<I, V>
 where
-    Smlt: Simulate<Self>,
+    Smltr: Simulate<Self>,
 {
-    fn run_with(self, simulator: &mut Smlt) {
+    fn run_with(self, simulator: &mut Smltr) {
         simulator.simulate(self)
     }
 }
@@ -72,11 +72,11 @@ impl<I, V> ChangeBy<I, V> {
     }
 }
 
-impl<I, V, Smlt> Simulatable<Smlt> for ChangeBy<I, V>
+impl<I, V, Smltr> Simulatable<Smltr> for ChangeBy<I, V>
 where
-    Smlt: Simulate<Self>,
+    Smltr: Simulate<Self>,
 {
-    fn run_with(self, simulator: &mut Smlt) {
+    fn run_with(self, simulator: &mut Smltr) {
         simulator.simulate(self)
     }
 }
@@ -102,11 +102,11 @@ impl<I> Execute<I> {
     }
 }
 
-impl<I, Smlt> Simulatable<Smlt> for Execute<I>
+impl<I, Smltr> Simulatable<Smltr> for Execute<I>
 where
-    Smlt: Simulate<Self>,
+    Smltr: Simulate<Self>,
 {
-    fn run_with(self, simulator: &mut Smlt) {
+    fn run_with(self, simulator: &mut Smltr) {
         simulator.simulate(self)
     }
 }

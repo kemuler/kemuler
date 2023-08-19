@@ -121,8 +121,8 @@ impl Sleep {
     }
 }
 
-impl<Smlt> Simulatable<Smlt> for Sleep {
-    fn run_with(self, _: &mut Smlt) {
+impl<Smltr> Simulatable<Smltr> for Sleep {
+    fn run_with(self, _: &mut Smltr) {
         thread::sleep(self.0);
     }
 }
@@ -146,11 +146,11 @@ pub struct Repeat<S> {
     pub times: usize,
 }
 
-impl<S, Smlt> Simulatable<Smlt> for Repeat<S>
+impl<S, Smltr> Simulatable<Smltr> for Repeat<S>
 where
-    S: Simulatable<Smlt> + Clone,
+    S: Simulatable<Smltr> + Clone,
 {
-    fn run_with(self, simulator: &mut Smlt) {
+    fn run_with(self, simulator: &mut Smltr) {
         for _ in 0..self.times {
             self.simulate.clone().run_with(simulator)
         }
@@ -195,14 +195,14 @@ macro_rules! tuple_impl {
         tuple_impl!{@cut_one $($n => $g,)*}
     };
     (@impl $($n:tt => $g:ident,)*) => {
-        impl<Smlt, $($g,)*> Simulatable<Smlt> for Sequence<($($g,)*)>
+        impl<Smltr, $($g,)*> Simulatable<Smltr> for Sequence<($($g,)*)>
         where
             $(
-                $g: Simulatable<Smlt>,
+                $g: Simulatable<Smltr>,
             )*
         {
             #[allow(unused)]
-            fn run_with(self, simulator: &mut Smlt) {
+            fn run_with(self, simulator: &mut Smltr) {
                 let inner= self.0;
                 reverse_order!(
                     $(
@@ -254,12 +254,12 @@ pub struct IterSequence<I> {
     iter: I,
 }
 
-impl<I, Smlt> Simulatable<Smlt> for IterSequence<I>
+impl<I, Smltr> Simulatable<Smltr> for IterSequence<I>
 where
     I: IntoIterator,
-    <I as IntoIterator>::Item: Simulatable<Smlt>,
+    <I as IntoIterator>::Item: Simulatable<Smltr>,
 {
-    fn run_with(self, simulator: &mut Smlt) {
+    fn run_with(self, simulator: &mut Smltr) {
         for s in self.iter {
             s.run_with(simulator);
         }
@@ -281,13 +281,13 @@ pub struct During<DS, S> {
     simulate: S,
 }
 
-impl<DS, S, Smlt> Simulatable<Smlt> for During<DS, S>
+impl<DS, S, Smltr> Simulatable<Smltr> for During<DS, S>
 where
-    S: Simulatable<Smlt>,
-    DS: Invert + Simulatable<Smlt> + Clone,
-    <DS as Invert>::Output: Simulatable<Smlt>,
+    S: Simulatable<Smltr>,
+    DS: Invert + Simulatable<Smltr> + Clone,
+    <DS as Invert>::Output: Simulatable<Smltr>,
 {
-    fn run_with(self, simulator: &mut Smlt) {
+    fn run_with(self, simulator: &mut Smltr) {
         self.during.clone().run_with(simulator);
         self.simulate.run_with(simulator);
         self.during.invert().run_with(simulator);
@@ -308,11 +308,11 @@ where
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Call<F>(F);
 
-impl<Smlt, F> Simulatable<Smlt> for Call<F>
+impl<Smltr, F> Simulatable<Smltr> for Call<F>
 where
-    F: FnMut(&mut Smlt),
+    F: FnMut(&mut Smltr),
 {
-    fn run_with(mut self, simulator: &mut Smlt) {
+    fn run_with(mut self, simulator: &mut Smltr) {
         self.0(simulator)
     }
 }

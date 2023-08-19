@@ -7,11 +7,11 @@ pub trait Simulate<S> {
     fn simulate(&mut self, simulatable: S);
 }
 
-impl<S, Smlt0, Smlt1> Simulate<S> for (&mut Smlt0, &mut Smlt1)
+impl<S, Smltr0, Smltr1> Simulate<S> for (&mut Smltr0, &mut Smltr1)
 where
     S: Clone,
-    Smlt0: Simulate<S>,
-    Smlt1: Simulate<S>,
+    Smltr0: Simulate<S>,
+    Smltr1: Simulate<S>,
 {
     fn simulate(&mut self, simulatable: S) {
         self.0.simulate(simulatable.clone());
