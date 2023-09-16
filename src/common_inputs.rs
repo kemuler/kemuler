@@ -50,7 +50,7 @@ macro_rules! button_like_impl_body {
         /// ```
         /// # use kemuler::{prelude::*, input_event::*, combinator::*};
         /// # let this = 0i32;
-        /// Sequence((
+        /// SimTuple((
         ///     SetTo { input: this, to: true },
         ///     SetTo { input: this, to: false }
         /// ))
@@ -58,14 +58,14 @@ macro_rules! button_like_impl_body {
         /// ```
         fn click(
             self,
-        ) -> $crate::combinator::Sequence<(
+        ) -> $crate::combinator::SimTuple<(
             $crate::input_event::SetTo<Self, bool>,
             $crate::input_event::SetTo<Self, bool>,
         )>
         where
             Self: Clone,
         {
-            $crate::combinator::Sequence((self.clone().down(), self.up()))
+            $crate::combinator::SimTuple((self.clone().down(), self.up()))
         }
     };
     (pub) => {
@@ -111,7 +111,7 @@ macro_rules! button_like_impl_body {
         /// ```
         /// # use kemuler::{prelude::*, input_event::*, combinator::*};
         /// # let this = 0i32;
-        /// Sequence((
+        /// SimTuple((
         ///     SetTo { input: this, to: true },
         ///     SetTo { input: this, to: false }
         /// ))
@@ -119,14 +119,14 @@ macro_rules! button_like_impl_body {
         /// ```
         pub fn click(
             self,
-        ) -> $crate::combinator::Sequence<(
+        ) -> $crate::combinator::SimTuple<(
             $crate::input_event::SetTo<Self, bool>,
             $crate::input_event::SetTo<Self, bool>,
         )>
         where
             Self: Clone,
         {
-            $crate::combinator::Sequence((self.clone().down(), self.up()))
+            $crate::combinator::SimTuple((self.clone().down(), self.up()))
         }
     };
 }
@@ -274,25 +274,25 @@ impl From<char> for Char {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct StrSequence<'a>(pub &'a str);
+pub struct StrSimTuple<'a>(pub &'a str);
 
 /// This is a convenience shorthand for
 /// ```
 /// # use kemuler::{prelude::*, input_event::*};
-/// # let this = StrSequence("abcdefg");
+/// # let this = StrSimTuple("abcdefg");
 /// # let output =
 /// Execute { input: this }
 /// # ;
 /// # assert_eq!(this.execute(), output);
 /// ```
-impl<'a> StrSequence<'a> {
+impl<'a> StrSimTuple<'a> {
     pub fn execute(self) -> Execute<Self> {
         Execute { input: self }
     }
 }
 
-impl<'a> From<&'a str> for StrSequence<'a> {
+impl<'a> From<&'a str> for StrSimTuple<'a> {
     fn from(value: &'a str) -> Self {
-        StrSequence(value)
+        StrSimTuple(value)
     }
 }

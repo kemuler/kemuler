@@ -17,18 +17,18 @@ pub use self::spin_sleep::SpinSleep;
 /// Helper combinator trait.
 pub trait Combine: Sized {
     /// Simulate `self` and then `next`
-    fn then<S>(self, next: S) -> Sequence<(Self, S)> {
-        Sequence((self, next))
+    fn then<S>(self, next: S) -> SimTuple<(Self, S)> {
+        SimTuple((self, next))
     }
 
     /// Simulate `self` and then sleep for duration
-    fn sleep(self, duration: Duration) -> Sequence<(Self, Sleep)> {
+    fn sleep(self, duration: Duration) -> SimTuple<(Self, Sleep)> {
         self.then(Sleep::new(duration))
     }
 
     /// Simulate `self` and then spin sleep for duration
     #[cfg(feature = "spin_sleep")]
-    fn spin_sleep(self, duration: Duration) -> Sequence<(Self, SpinSleep)> {
+    fn spin_sleep(self, duration: Duration) -> SimTuple<(Self, SpinSleep)> {
         self.then(SpinSleep::new(duration))
     }
 
@@ -42,18 +42,18 @@ pub trait Combine: Sized {
 
     /// Iterate through an iterator and simulate each item
     /// Self must be an iterator and its item must be `Simulatable`.
-    fn iter_seq(self) -> IterSequence<Self>
+    fn sim_iter(self) -> SimIter<Self>
     where
         Self: IntoIterator,
     {
-        IterSequence { iter: self }
+        SimIter { iter: self }
     }
 
     /// Simulate through a tuple starting from `.0`.
     /// Self must be a tuple with 0 <= size <= 32.
     /// Nest them if you ever need more.
-    fn seq(self) -> Sequence<Self> {
-        Sequence(self)
+    fn sim_tuple(self) -> SimTuple<Self> {
+        SimTuple(self)
     }
 
     /// Simulate self during an event.
@@ -131,7 +131,7 @@ where
 /// Supported size: 0 <= size <= 32
 /// Nest them if you ever need more.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Sequence<T>(pub T);
+pub struct SimTuple<T>(pub T);
 
 /// put statments in reverse order
 macro_rules! reverse_order {
@@ -156,7 +156,7 @@ macro_rules! tuple_impl {
         tuple_impl!{@cut_one $($n => $g,)*}
     };
     (@impl $($n:tt => $g:ident,)*) => {
-        impl<Smltr, $($g,)*> Simulatable<Smltr> for Sequence<($($g,)*)>
+        impl<Smltr, $($g,)*> Simulatable<Smltr> for SimTuple<($($g,)*)>
         where
             $(
                 $g: Simulatable<Smltr>,
@@ -173,7 +173,7 @@ macro_rules! tuple_impl {
             }
         }
 
-        impl<$($g,)*> fmt::Display for Sequence<($($g,)*)>
+        impl<$($g,)*> fmt::Display for SimTuple<($($g,)*)>
         where
             $(
                 $g: fmt::Display,
@@ -211,11 +211,11 @@ tuple_impl! {
 
 /// Automatically do a for loop on an iterator and simulate for you!
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct IterSequence<I> {
+pub struct SimIter<I> {
     iter: I,
 }
 
-impl<I, Smltr> Simulatable<Smltr> for IterSequence<I>
+impl<I, Smltr> Simulatable<Smltr> for SimIter<I>
 where
     I: IntoIterator,
     <I as IntoIterator>::Item: Simulatable<Smltr>,
@@ -227,7 +227,7 @@ where
     }
 }
 
-impl<S> fmt::Display for IterSequence<S>
+impl<S> fmt::Display for SimIter<S>
 where
     S: fmt::Display,
 {

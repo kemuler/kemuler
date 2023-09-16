@@ -50,25 +50,25 @@
 )]
 //! ```
 //!
-//! Tuple supports! Only up to 32 indexes;
-//! if you some how need much more than that then nested tuple will suffice.
-//! Chains simulatable one by one without `.then`.
-//! (`then` actually returns this)
+//! Tuple supports! (Up to 32 indexes; nest tuple if you need more)
+//! Chain simulatables one by one starting from `.0`.
 //! ```
 //! # use kemuler::{
 //! #     string_event_logger::StringEventLogger as Simulator,
 //! #     assert_events, prelude::*
 //! # };
 //! # let mut s = Simulator::new();
+//! use kemuler::utils::time::millis;
+//!
 //! (
 //!     Key::Control.down(),
 //!     MouseButton::Right.down(),
-//!     Sleep::for_millis(100),
+//!     Sleep(millis(100)),
 //!     Key::Control.up(),
 //!     MouseButton::Right.up(),
 //! )
-//!     // wrap this tuple with the `Sequence` type to make it simulatable
-//!     .seq()
+//!     // Wrap this tuple with the `SimTuple`
+//!     .sim_tuple()
 //!     .run_with(&mut s);
 //!
 #![doc = doc_events!(
@@ -81,8 +81,8 @@
 //! ```
 //!
 //! Iterator supports!
-//! This does a for loop internally and simulate each item
-//! as long as the item is simulatable.
+//! This does a for loop internally and simulate each item.
+//! This supports every type that implements `IntoIterator` and item is `Simulatable`.
 //! ```
 //! # use kemuler::{
 //! #     string_event_logger::StringEventLogger as Simulator,
@@ -95,10 +95,8 @@
 //!     Key::Alt.up(),
 //!     Key::Tab.up()
 //! ]
-//!     // wrap this iterator with the `IterSequence` type
-//!     // to make this iterator simulatable.
-//!     // This supports every type that implements `IntoIterator`.
-//!     .iter_seq()
+//!     // Wrap this iterator with the `SimIter` type.
+//!     .sim_iter()
 //!     .run_with(&mut s);
 //!
 #![doc = doc_events!(
@@ -117,6 +115,8 @@
 //! #     assert_events, prelude::*
 //! # };
 //! # let mut s = Simulator::new();
+//! use kemuler::utils::time::millis;
+//!
 //! // do these 3 times:
 //! //   left click
 //! //   space bar click
@@ -124,10 +124,10 @@
 //! //
 //! (
 //!     MouseButton::Left.click(),
-//!     Key::Space.click().sleep_for_millis(10),
+//!     Key::Space.click().sleep(millis(10)),
 //! )
-//!     .seq()
-//!     .repeat(2)
+//!     .sim_tuple()
+//!     .repeat(3)
 //!     .run_with(&mut s);
 //!
 #![doc = doc_events!(

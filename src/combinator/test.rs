@@ -87,7 +87,7 @@ fn combinator_iter_seq() {
     let x = [Key::F1, Key::F2, Key::F3, Key::F4, Key::F5]
         .iter()
         .map(|k| k.down())
-        .iter_seq();
+        .sim_iter();
     x.run_with(&mut s);
     assert_events!(
         s,
@@ -109,7 +109,7 @@ fn combinator_seq() {
         MouseButton::Left.up(),
         MousePosition.move_to(25, 10),
     )
-        .seq();
+        .sim_tuple();
     x.run_with(&mut s);
     assert_events!(
         s,
@@ -124,7 +124,7 @@ fn combinator_seq() {
 #[test]
 fn combinator_seq_empty() {
     let mut s = S::new();
-    let x = ().seq();
+    let x = ().sim_tuple();
     x.run_with(&mut s);
     assert_eq!(s.data.len(), 0);
 }
