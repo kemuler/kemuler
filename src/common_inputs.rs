@@ -16,67 +16,6 @@ macro_rules! button_like_impl_body {
         /// SetTo { input: this, to: to }
         /// # ;
         /// ```
-        fn set_to(self, to: bool) -> $crate::input_event::SetTo<Self, bool> {
-            $crate::input_event::SetTo::new(self, to)
-        }
-
-        /// Press the button.
-        /// This is a convenience shorthand for
-        /// ```
-        /// # use kemuler::input_event::*;
-        /// # let this = 0i32;
-        /// SetTo { input: this, to: true }
-        /// # ;
-        /// ```
-        fn down(self) -> $crate::input_event::SetTo<Self, bool> {
-            self.set_to(true)
-        }
-
-        /// Release the key
-        /// This is a convenience shorthand for
-        /// ```
-        /// # use kemuler::input_event::*;
-        /// # let this = 0i32;
-        /// SetTo { input: this, to: false }
-        /// # ;
-        /// ```
-        fn up(self) -> $crate::input_event::SetTo<Self, bool> {
-            self.set_to(false)
-        }
-
-        /// Press and release the button consecutively.
-        /// This is a convenience shorthand for
-        /// ```
-        /// # use kemuler::{prelude::*, input_event::*, combinator::*};
-        /// # let this = 0i32;
-        /// SimTuple((
-        ///     SetTo { input: this, to: true },
-        ///     SetTo { input: this, to: false }
-        /// ))
-        /// # ;
-        /// ```
-        fn click(
-            self,
-        ) -> $crate::combinator::SimTuple<(
-            $crate::input_event::SetTo<Self, bool>,
-            $crate::input_event::SetTo<Self, bool>,
-        )>
-        where
-            Self: Clone,
-        {
-            $crate::combinator::SimTuple((self.clone().down(), self.up()))
-        }
-    };
-    (pub) => {
-        /// Set this button state
-        /// This is a convenience shorthand for
-        /// ```
-        /// # use kemuler::input_event::*;
-        /// # let this = 0i32;
-        /// # let to = 0i32;
-        /// SetTo { input: this, to: to }
-        /// # ;
-        /// ```
         pub fn set_to(self, to: bool) -> $crate::input_event::SetTo<Self, bool> {
             $crate::input_event::SetTo::new(self, to)
         }
@@ -153,7 +92,7 @@ pub enum Key {
 }
 
 impl Key {
-    button_like_impl_body! {pub}
+    button_like_impl_body! {}
 }
 
 impl fmt::Display for Key {
@@ -250,7 +189,7 @@ pub enum MouseButton {
 }
 
 impl MouseButton {
-    button_like_impl_body! {pub}
+    button_like_impl_body! {}
 }
 
 impl fmt::Display for MouseButton {
@@ -263,7 +202,7 @@ impl fmt::Display for MouseButton {
 pub struct Char(pub char);
 
 impl Char {
-    button_like_impl_body! {pub}
+    button_like_impl_body! {}
 }
 
 impl From<char> for Char {
