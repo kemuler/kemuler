@@ -5,7 +5,6 @@ use std::fmt;
 
 /// This macro generate convenient methods usable for traits and impl blocks.
 /// Must only be used inside trait definitons and impl block definitions.
-#[macro_export]
 macro_rules! button_like_impl_body {
     () => {
         /// Set this button state
