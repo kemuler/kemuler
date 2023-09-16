@@ -26,21 +26,10 @@ pub trait Combine: Sized {
         self.then(Sleep::new(duration))
     }
 
-    /// Simulate `self` and then sleep for duration in milliseconds
-    fn sleep_for_millis(self, duration: u64) -> Sequence<(Self, Sleep)> {
-        self.sleep(Duration::from_millis(duration))
-    }
-
     /// Simulate `self` and then spin sleep for duration
     #[cfg(feature = "spin_sleep")]
     fn spin_sleep(self, duration: Duration) -> Sequence<(Self, SpinSleep)> {
         self.then(SpinSleep::new(duration))
-    }
-
-    /// Simulate `self` and then spin sleep for duration in milliseconds
-    #[cfg(feature = "spin_sleep")]
-    fn spin_sleep_for_millis(self, duration: u64) -> Sequence<(Self, SpinSleep)> {
-        self.spin_sleep(Duration::from_millis(duration))
     }
 
     /// Repeat simulation for amount of times
@@ -90,34 +79,6 @@ pub struct Sleep(pub Duration);
 impl Sleep {
     pub fn new(duration: Duration) -> Sleep {
         Sleep(duration)
-    }
-
-    /// # Panics
-    /// This constructor will panic if `secs` is negative, overflows `Duration` or not finite.
-    pub fn for_secs_f64(secs: f64) -> Sleep {
-        Sleep::new(Duration::from_secs_f64(secs))
-    }
-
-    /// # Panics
-    /// This constructor will panic if `secs` is negative, overflows `Duration` or not finite.
-    pub fn for_secs_f32(secs: f32) -> Sleep {
-        Sleep::new(Duration::from_secs_f32(secs))
-    }
-
-    pub fn for_secs(secs: u64) -> Sleep {
-        Sleep::new(Duration::from_secs(secs))
-    }
-
-    pub fn for_millis(millis: u64) -> Sleep {
-        Sleep::new(Duration::from_millis(millis))
-    }
-
-    pub fn for_micros(micros: u64) -> Sleep {
-        Sleep::new(Duration::from_micros(micros))
-    }
-
-    pub fn for_nanos(nanos: u64) -> Sleep {
-        Sleep::new(Duration::from_nanos(nanos))
     }
 }
 
